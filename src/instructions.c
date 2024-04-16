@@ -3,6 +3,7 @@
 
 #include <stdbool.h>
 #include <stdint.h>
+#include "core.h"
 #include "instructions.h"
 
 R_INSTRUCTION as_r_instruction(uint32_t instruction) {

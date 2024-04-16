@@ -59,7 +59,7 @@ const uint8_t OP0_FADD = 0b0000;
 const uint8_t OP1_FADD = 0b111;
 const uint8_t OP2_FADD = 0b00;
 const uint8_t RND_FADD = 0b00;
-bool is_add_instruction(uint32_t instruction, R_INSTRUCTION* decoded_instruction);
+bool is_fadd_instruction(uint32_t instruction, const R_INSTRUCTION* decoded_instruction);
 
 // const uint8_t OPCODE_SUB = 0b0110011;
 // const uint8_t FUNC3_SUB = 0b000;
