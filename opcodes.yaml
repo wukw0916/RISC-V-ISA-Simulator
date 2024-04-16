@@ -1,102 +1,108 @@
 operations:
-  ADD:
-    opcode: "0b0110011"
-    func3: "0b000"
-    func7: "0b0000000"
+  FADD:
+    op0: "0b0000"
+    op0: "0b111"
+    op0: "0b00"
+    rnd: "0b00"
     instruction_type: R
-  SUB:
-    opcode: "0b0110011"
-    func3: "0b000"
-    func7: "0b0100000"
-    instruction_type: R
-  LW:
-    opcode: "0b0000011"
-    func3: "0b010"
-    instruction_type: I
+  # SUB:
+  #   opcode: "0b0110011"
+  #   func3: "0b000"
+  #   func7: "0b0100000"
+  #   instruction_type: R
+  # LW:
+  #   opcode: "0b0000011"
+  #   func3: "0b010"
+  #   instruction_type: I
 instruction_types:
   R:
-    - name: opcode
+    - name: op0
       signed: false
       bits:
         - start: 0
-          end: 6
+          end: 3
     - name: rd
       signed: false
       bits:
-        - start: 7
-          end: 11
-    - name: func3
-      signed: false
-      bits:
-        - start: 12
-          end: 14
+        - start: 4
+          end: 10
     - name: rs1
       signed: false
       bits:
-        - start: 15
-          end: 19
+        - start: 11
+          end: 17
     - name: rs2
       signed: false
       bits:
-        - start: 20
+        - start: 18
           end: 24
-    - name: func7
+    - name: op1
       signed: false
       bits:
         - start: 25
+          end: 27
+    - name: op2
+      signed: false
+      bits:
+        - start: 28
+          end: 29
+    - name: rnd
+      signed: false
+      bits:
+        - start: 30
           end: 31
-  I:
-    - name: opcode
-      signed: false
-      bits:
-        - start: 0
-          end: 7
-    - name: rd
-      signed: false
-      bits:
-        - start: 6
-          end: 11
-    - name: func3
-      signed: false
-      bits:
-        - start: 12
-          end: 14
-    - name: rs1
-      signed: false
-      bits:
-        - start: 15
-          end: 19
-    - name: imm
-      signed: true
-      bits:
-        - zeros: 1
-        - start: 25
-          end: 31
-  S:
-    - name: opcode
-      signed: false
-      bits:
-        - start: 0
-          end: 6
-    - name: func3
-      signed: false
-      bits:
-        - start: 12
-          end: 14
-    - name: rs1
-      signed: false
-      bits:
-        - start: 15
-          end: 19
-    - name: rs2
-      signed: false
-      bits:
-        - start: 20
-          end: 24
-    - name: imm
-      signed: false
-      bits:
-        - start: 7
-          end: 11
-        - start: 25
-          end: 31
+  # I:
+  #   - name: opcode
+  #     signed: false
+  #     bits:
+  #       - start: 0
+  #         end: 7
+  #   - name: rd
+  #     signed: false
+  #     bits:
+  #       - start: 6
+  #         end: 11
+  #   - name: func3
+  #     signed: false
+  #     bits:
+  #       - start: 12
+  #         end: 14
+  #   - name: rs1
+  #     signed: false
+  #     bits:
+  #       - start: 15
+  #         end: 19
+  #   - name: imm
+  #     signed: true
+  #     bits:
+  #       - zeros: 1
+  #       - start: 25
+  #         end: 31
+  # S:
+  #   - name: opcode
+  #     signed: false
+  #     bits:
+  #       - start: 0
+  #         end: 6
+  #   - name: func3
+  #     signed: false
+  #     bits:
+  #       - start: 12
+  #         end: 14
+  #   - name: rs1
+  #     signed: false
+  #     bits:
+  #       - start: 15
+  #         end: 19
+  #   - name: rs2
+  #     signed: false
+  #     bits:
+  #       - start: 20
+  #         end: 24
+  #   - name: imm
+  #     signed: false
+  #     bits:
+  #       - start: 7
+  #         end: 11
+  #       - start: 25
+  #         end: 31
