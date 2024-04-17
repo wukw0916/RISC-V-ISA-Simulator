@@ -67,7 +67,8 @@ int main(int argc, char* argv[]) {
         FILE *f;
         if ((f = fopen(target_file, "r+")) == NULL)
             FAIL_SYS("Unable to open input file: %s", target_file);
-
+            
+    // init simulator
         simulator s;
         simulator_init(&s, simulation_size);
 
@@ -109,17 +110,11 @@ int main(int argc, char* argv[]) {
             display_memory(&s, 0, line_no);
 
         /*Execution loop*/
-        while (1) {
-            bool ret = (execute_simulation_step(&s, pc_init));
+        while (execute_simulation_step(&s)) { }
 
-            if (!ret) {
                 simulator_destroy(&s);
                 exit(EXIT_SUCCESS);
                 printf("Shouldn't see this if execution halted\n"); //There to prove that the sim actually halts
-            }
-
-            pc_init += 4;
-        }
 
     } else {
         usage("Target file not specified", 1);
