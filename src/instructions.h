@@ -57,10 +57,10 @@ R_INSTRUCTION as_r_instruction(uint32_t instruction);
 // } S_INSTRUCTION;
 // S_INSTRUCTION as_s_instruction(uint32_t instruction);
 
-const uint8_t OP0_FADD = 0b0000;
-const uint8_t OP1_FADD = 0b111;
-const uint8_t OP2_FADD = 0b00;
-const uint8_t RND_FADD = 0b00;
+#define OP0_FADD = 0b0000;
+#define OP1_FADD = 0b111;
+#define OP2_FADD = 0b00;
+#define RND_FADD = 0b00;
 bool is_fadd_instruction(uint32_t instruction, const R_INSTRUCTION* decoded_instruction);
 
 // const uint8_t OPCODE_SUB = 0b0110011;

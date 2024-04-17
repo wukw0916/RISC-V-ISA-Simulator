@@ -14,11 +14,17 @@ build/egp01_simulator: src/main.o src/simulator.o
 src/%.o: src/%.c
 	$(CC) $(CFLAGS) -c $< -o $@
 
-tests/%: tests/%.mem build/egp01_simulator
+tests/instructions/%.o: tests/instructions/%.c tests/instructions/test_main.h
+	$(CC) $(CFLAGS) -c $< -o $@
+
+tests/instructions/%: src/instructions.o tests/instructions/%.o
+	$(CC) $^ -o $@
+
+tests/c_code/%: tests/c_code/%.mem build/egp01_simulator
 	./build/egp01_simulator --load-file $< --verbose
 
-tests/%.mem: tests/%.c
-	./tools/c_to_mem $@
+tests/c_code/%.mem: tests/c_code/%.c
+	./tools/c_to_mem $<
 
 clean:
-	-rm -rf src/*.o build
+	-rm -rf src/*.o tests/*/*.o build
