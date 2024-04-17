@@ -9,15 +9,17 @@
 
 #include <stdint.h>
 
+#include "simulator.h"
+
 typedef struct {
     // <TotalBits=4>
     uint8_t op0;
     // <TotalBits=7>
-    uint8_t rd;
+    REGISTER rd;
     // <TotalBits=7>
-    uint8_t rs1;
+    REGISTER rs1;
     // <TotalBits=7>
-    uint8_t rs2;
+    REGISTER rs2;
     // <TotalBits=3>
     uint8_t op1;
     // <TotalBits=2>

@@ -6,66 +6,84 @@
 #include "core.h"
 #include "instructions.h"
 
+#define get_word_bits(instruction, start, end) \
+    ((instruction << start) & (((uint32_t) ~0) >> (32 + start - end)))
+
 
 R_INSTRUCTION as_r_instruction(uint32_t instruction) {
-    return (R_INSTRUCTION) {
+    R_INSTRUCTION d = {
         .op0 = (
-            // <TotalBits=3>
-            // <Start=0> <End=3> <Length=3> <Offset=0> <Zero=false>
-            ((instruction << 0) & (0xFFFFFFFF >> (32 + 0 - 3)) << 0)
+            // <TotalBits=4>
+            // <Start=0> <End=3> <Length=4> <Offset=0> <Zero=false>
+            (get_word_bits(instruction, 0, 3) << 0)
             |
             // Unsigned
             0
         ),
         .rd = (
-            // <TotalBits=6>
-            // <Start=4> <End=10> <Length=6> <Offset=0> <Zero=false>
-            ((instruction << 4) & (0xFFFFFFFF >> (32 + 4 - 10)) << 0)
+            // <TotalBits=7>
+            // <Start=4> <End=10> <Length=7> <Offset=0> <Zero=false>
+            (get_word_bits(instruction, 4, 10) << 0)
             |
             // Unsigned
             0
         ),
         .rs1 = (
-            // <TotalBits=6>
-            // <Start=11> <End=17> <Length=6> <Offset=0> <Zero=false>
-            ((instruction << 11) & (0xFFFFFFFF >> (32 + 11 - 17)) << 0)
+            // <TotalBits=7>
+            // <Start=11> <End=17> <Length=7> <Offset=0> <Zero=false>
+            (get_word_bits(instruction, 11, 17) << 0)
             |
             // Unsigned
             0
         ),
         .rs2 = (
-            // <TotalBits=6>
-            // <Start=18> <End=24> <Length=6> <Offset=0> <Zero=false>
-            ((instruction << 18) & (0xFFFFFFFF >> (32 + 18 - 24)) << 0)
+            // <TotalBits=7>
+            // <Start=18> <End=24> <Length=7> <Offset=0> <Zero=false>
+            (get_word_bits(instruction, 18, 24) << 0)
             |
             // Unsigned
             0
         ),
         .op1 = (
-            // <TotalBits=2>
+            // <TotalBits=3>
             // <Start=25> <End=27> <Length=3> <Offset=0> <Zero=false>
-            ((instruction << 25) & (0xFFFFFFFF >> (32 + 25 - 27)) << 0)
+            (get_word_bits(instruction, 25, 27) << 0)
             |
             // Unsigned
             0
         ),
         .op2 = (
-            // <TotalBits=1>
-            // <Start=28> <End=29> <Length=1> <Offset=0> <Zero=false>
-            ((instruction << 28) & (0xFFFFFFFF >> (32 + 28 - 29)) << 0)
+            // <TotalBits=2>
+            // <Start=28> <End=29> <Length=2> <Offset=0> <Zero=false>
+            (get_word_bits(instruction, 28, 29) << 0)
             |
             // Unsigned
             0
         ),
         .rnd = (
-            // <TotalBits=1>
-            // <Start=30> <End=31> <Length=1> <Offset=0> <Zero=false>
-            ((instruction << 30) & (0xFFFFFFFF >> (32 + 30 - 31)) << 0)
+            // <TotalBits=2>
+            // <Start=30> <End=31> <Length=2> <Offset=0> <Zero=false>
+            (get_word_bits(instruction, 30, 31) << 0)
             |
             // Unsigned
             0
         )
     };
+    if (d.op0 > (1 << 4))
+        FAIL("R_INSTRUCTION.opcode decode error: size %d", d.op0);
+    if (d.rd > (1 << 7))
+        FAIL("R_INSTRUCTION.rd decode error: size %d", d.rd);
+    if (d.rs1 > (1 << 7))
+        FAIL("R_INSTRUCTION.rs1 decode error: size %d", d.rs1);
+    if (d.rs2 > (1 << 7))
+        FAIL("R_INSTRUCTION.rs2 decode error: size %d", d.rs2);
+    if (d.op1 > (1 << 3))
+        FAIL("R_INSTRUCTION.opcode decode error: size %d", d.op1);
+    if (d.op2 > (1 << 2))
+        FAIL("R_INSTRUCTION.opcode decode error: size %d", d.op2);
+    if (d.rnd > (1 << 2))
+        FAIL("R_INSTRUCTION.rnd decode error: size %d", d.rnd);
+    return d;
 }
 
 // I_INSTRUCTION as_i_instruction(uint32_t instruction) {
