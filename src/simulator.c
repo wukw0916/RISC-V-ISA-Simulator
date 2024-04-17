@@ -2,6 +2,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <stdbool.h>
 
 #include "core.h"
 #include "simulator.h"
@@ -54,6 +55,7 @@ void write_word(simulator* s, uint32_t addr, uint32_t word) {
     }
 
     *((uint32_t*) (s->memory + addr)) = word;
+    s->pc = addr;
 }
 
 void write_byte(simulator* s, uint32_t addr, uint8_t byte) {
@@ -64,4 +66,23 @@ void write_byte(simulator* s, uint32_t addr, uint8_t byte) {
     }
 
     *((uint8_t*) (s->memory + addr)) = byte;
+}
+
+bool execute_simulation_step(simulator* s, uint32_t PC) {
+    // Check if address is out of bounds
+    if (PC > s->pc) {
+        WARN("Execution reached the end without a halt: %08X", PC);
+        exit(EXIT_FAILURE);
+    }
+
+    bool ret = true;
+    
+    if ((*(uint32_t*)(s->memory + PC)) == 0) {
+        INFO("Execution halted at PC: %08X", PC);
+        ret = false;
+    }
+    else {
+        /*else if instruction != zeros, then execute*/
+    }
+    return ret;
 }
