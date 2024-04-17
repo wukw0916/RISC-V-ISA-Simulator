@@ -1,4 +1,4 @@
-name: Compile Test
+name: eGP01 Isa Simulator Compile Test
 on:
   push:
     branches:
@@ -13,7 +13,7 @@ jobs:
       - name: Compile the program
         run: make
       - name: Run example
-        run: ./build/riscv_simulator --verbose --load-file example.mem
+        run: ./build/egp01_simulator --verbose --load-file example.mem
   opcode-up-to-date:
     runs-on: ubuntu-latest
     steps:
