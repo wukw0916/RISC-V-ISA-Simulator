@@ -70,7 +70,7 @@ R_INSTRUCTION as_r_instruction(uint32_t instruction) {
         )
     };
     if (d.op0 > (1 << 4))
-        FAIL("R_INSTRUCTION.opcode decode error: size %d", d.op0);
+        FAIL("R_INSTRUCTION.op0 decode error: size %d", d.op0);
     if (d.rd > (1 << 7))
         FAIL("R_INSTRUCTION.rd decode error: size %d", d.rd);
     if (d.rs1 > (1 << 7))
@@ -78,9 +78,9 @@ R_INSTRUCTION as_r_instruction(uint32_t instruction) {
     if (d.rs2 > (1 << 7))
         FAIL("R_INSTRUCTION.rs2 decode error: size %d", d.rs2);
     if (d.op1 > (1 << 3))
-        FAIL("R_INSTRUCTION.opcode decode error: size %d", d.op1);
+        FAIL("R_INSTRUCTION.op1 decode error: size %d", d.op1);
     if (d.op2 > (1 << 2))
-        FAIL("R_INSTRUCTION.opcode decode error: size %d", d.op2);
+        FAIL("R_INSTRUCTION.op2 decode error: size %d", d.op2);
     if (d.rnd > (1 << 2))
         FAIL("R_INSTRUCTION.rnd decode error: size %d", d.rnd);
     return d;
@@ -182,9 +182,10 @@ R_INSTRUCTION as_r_instruction(uint32_t instruction) {
 //     };
 // }
 
-bool is_fadd_instruction(uint32_t instruction, R_INSTRUCTION* decoded_instruction) {
+bool is_fadd_instruction(const R_INSTRUCTION* decoded_instruction) {
+    if (decoded_instruction == NULL) FAIL("Received NULL pointer on is_add_instruction");
     if (decoded_instruction->op0 != 0b0000) return false;
-    if (decoded_instruction->op1 != 0b0111) return false;
+    if (decoded_instruction->op1 != 0b111) return false;
     if (decoded_instruction->op2 != 0b00) return false;
     if (decoded_instruction->rnd != 0b00) return false;
     return true;

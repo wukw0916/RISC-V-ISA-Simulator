@@ -1,4 +1,5 @@
 #include "test_main.h"
 int main() {
-    return !(IS_INSTRUCTION(0x00500793, i, fadd));
+    // FADD a5, zero, 5
+    return !(IS_INSTRUCTION(0x005007b3, r, fadd));
 }
