@@ -8,7 +8,7 @@ echo "run testcase"
 echo "install yq"
 pip3 install --user yq
 echo "set envirment path"
-curl -L 'https://github.com/stedolan/jq/releases/download/jq-1.6/jq-linux64' > $HOME/.local/bin/jq
+# curl -L 'https://github.com/stedolan/jq/releases/download/jq-1.6/jq-linux64' > $HOME/.local/bin/jq
 echo "echo "Grant permissions to scripts""
 chmod +x $HOME/.local/bin/jq
 # Regenerate the opcodes
