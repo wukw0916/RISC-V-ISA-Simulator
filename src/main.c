@@ -71,6 +71,7 @@ int main(int argc, char* argv[]) {
     // init simulator
         simulator s;
         simulator_init(&s, simulation_size);
+        s.pc = pc_init; // init pc
 
         // Parse the file
         int line_no = 0;
