@@ -295,5 +295,5 @@ def generate(file_type):
 EOF
 )"
 
-yq -r "$SCRIPT generate(\"header\")" opcodes.yaml > src/instructions.h
-yq -r "$SCRIPT generate(\"code\")" opcodes.yaml > src/instructions.c
+yq -r "$SCRIPT generate(\"header\")" opcodes.yaml > src/instructions_test.h
+yq -r "$SCRIPT generate(\"code\")" opcodes.yaml > src/instructions_test.c
