@@ -25,7 +25,7 @@ typedef struct {
     // <TotalBits=2>
     uint8_t op2;
     // <TotalBits=2>
-    uint8_t rnd;
+    uint8_t type;
 } R_INSTRUCTION;
 R_INSTRUCTION as_r_instruction(uint32_t instruction);
 
@@ -58,10 +58,10 @@ R_INSTRUCTION as_r_instruction(uint32_t instruction);
 // S_INSTRUCTION as_s_instruction(uint32_t instruction);
 
 #define OP0_FADD = 0b0000;
-#define OP1_FADD = 0b111;
+#define OP1_FADD = 0b011;
 #define OP2_FADD = 0b00;
-#define RND_FADD = 0b00;
-bool is_fadd_instruction(const R_INSTRUCTION* decoded_instruction);
+#define TYPE_FADD = 0b00;
+bool is_slt_instruction(const R_INSTRUCTION* decoded_instruction);
 
 // const uint8_t OPCODE_SUB = 0b0110011;
 // const uint8_t FUNC3_SUB = 0b000;

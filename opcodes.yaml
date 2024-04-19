@@ -1,9 +1,15 @@
 operations:
-  FADD:
+  # FADD:
+  #   op0: "0b0000"
+  #   op1: "0b111"
+  #   op2: "0b00"
+  #   rnd: "0b00"
+  #   instruction_type: R
+  SLT:
     op0: "0b0000"
-    op1: "0b111"
+    op1: "0b011"
     op2: "0b00"
-    rnd: "0b00"
+    type: "0b00"
     instruction_type: R
   # SUB:
   #   opcode: "0b0110011"
@@ -49,7 +55,7 @@ instruction_types:
       bits:
         - start: 28
           end: 29
-    - name: rnd
+    - name: type
       signed: false
       bits:
         - start: 30

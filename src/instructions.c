@@ -60,7 +60,7 @@ R_INSTRUCTION as_r_instruction(uint32_t instruction) {
             // Unsigned
             0
         ),
-        .rnd = (
+        .type = (
             // <TotalBits=2>
             // <Start=30> <End=31> <Length=2> <Offset=0> <Zero=false>
             (get_word_bits(instruction, 30, 31) << 0)
@@ -81,8 +81,8 @@ R_INSTRUCTION as_r_instruction(uint32_t instruction) {
         FAIL("R_INSTRUCTION.op1 decode error: size %d", d.op1);
     if (d.op2 > (1 << 2))
         FAIL("R_INSTRUCTION.op2 decode error: size %d", d.op2);
-    if (d.rnd > (1 << 2))
-        FAIL("R_INSTRUCTION.rnd decode error: size %d", d.rnd);
+    if (d.type > (1 << 2))
+        FAIL("R_INSTRUCTION.type decode error: size %d", d.type);
     return d;
 }
 
@@ -182,12 +182,12 @@ R_INSTRUCTION as_r_instruction(uint32_t instruction) {
 //     };
 // }
 
-bool is_fadd_instruction(const R_INSTRUCTION* decoded_instruction) {
-    if (decoded_instruction == NULL) FAIL("Received NULL pointer on is_add_instruction");
+bool is_slt_instruction(const R_INSTRUCTION* decoded_instruction) {
+    if (decoded_instruction == NULL) FAIL("Received NULL pointer on is_slt_instruction");
     if (decoded_instruction->op0 != 0b0000) return false;
-    if (decoded_instruction->op1 != 0b111) return false;
+    if (decoded_instruction->op1 != 0b011) return false;
     if (decoded_instruction->op2 != 0b00) return false;
-    if (decoded_instruction->rnd != 0b00) return false;
+    if (decoded_instruction->type != 0b00) return false;
     return true;
 }
 
