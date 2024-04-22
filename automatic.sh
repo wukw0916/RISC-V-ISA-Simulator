@@ -45,6 +45,11 @@ run_example() {
     ./build/egp01_simulator --verbose --load-file example.mem
 }
 
+# Regenerate the code
+run_generate_code(){
+    ./tools/opcode_generator
+}
+
 # Compile generated code
 compile_generated_code() {
     gcc -c src/instructions.c
@@ -83,6 +88,7 @@ run_all_instruction_tests() {
 main() {
     compile_program
     run_example
+    run_generate_code
     compile_generated_code
     fail_if_not_up_to_date
     run_all_instruction_tests
