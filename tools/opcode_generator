@@ -176,9 +176,10 @@ def generate(file_type):
                                                 else
                                                     0
                                                 end)"
-                                            ) + [ (if $signed then
-                                                    "// Signed <Bits=\($total_bits)>\n(\(
-                                                        "(instruction >> (\($total_bits) - 1)) == 0 ? 0 : (0xFFFFFFFF << \($total_bits))"
+                                            ) + [ (last
+                                                | if $signed then
+                                                    "// Signed <LastBit=\(.end)>\n(\(
+                                                        "((1 << \(.end)) & instruction) == 0 ? 0 : ((~0) << \($total_bits - 1))"
                                                     ))"
                                                 else
                                                     "// Unsigned\n0"
@@ -295,5 +296,5 @@ def generate(file_type):
 EOF
 )"
 
-yq -r "$SCRIPT generate(\"header\")" opcodes.yaml > src/instructions_test.h
-yq -r "$SCRIPT generate(\"code\")" opcodes.yaml > src/instructions_test.c
+yq -r "$SCRIPT generate(\"header\")" opcodes.yaml > src/instructions.h
+yq -r "$SCRIPT generate(\"code\")" opcodes.yaml > src/instructions.c
