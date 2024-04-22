@@ -20,6 +20,12 @@ tests/instructions/%.o: tests/instructions/%.c tests/instructions/test_main.h
 tests/instructions/%: src/instructions.o tests/instructions/%.o
 	$(CC) $^ -o $@
 
+tests/simulation/%.o: tests/simulation/%.c
+	$(CC) $(CFLAGS) -c $< -o $@
+
+tests/simulation/%: src/instructions.o src/simulator.o tests/simulation/%.o
+	$(CC) $^ -o $@
+
 tests/c_code/%: tests/c_code/%.mem build/egp01_simulator
 	./build/egp01_simulator --load-file $< --verbose
 
