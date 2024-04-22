@@ -5,7 +5,7 @@ FAIL() {
     exit 1
 }
 
-TOOLCHAIN=riscv32-unknown-elf
+TOOLCHAIN=riscv64-unknown-elf
 CC="${TOOLCHAIN}-gcc"
 LD="${TOOLCHAIN}-ld"
 OBJDUMP="${TOOLCHAIN}-objdump"
