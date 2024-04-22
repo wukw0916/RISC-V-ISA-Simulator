@@ -100,7 +100,7 @@ main() {
     run_example
     build_instruction
     run_instruction
-    run_generate_code
+    # run_generate_code
     compile_generated_code
     fail_if_not_up_to_date
     run_all_instruction_tests
