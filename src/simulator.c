@@ -58,16 +58,17 @@ int read_file_to_memory(simulator* s, FILE *f) {
         REGISTER reg;
         if ((reg = register_from_name(addr_ptr)) < 32 && reg >= 0) {
             write_register(s, reg, value);
+        } else if (strcmp("PC", addr_ptr) == 0) {
+            s->pc = value;
         } else {
+            // Parse address
+            uint32_t addr;
+            if (sscanf(addr_ptr, "%X", &addr) != 1)
+                FAIL("Invalid line: %s", line);
 
-        // Parse address
-        uint32_t addr;
-        if (sscanf(addr_ptr, "%X", &addr) != 1)
-            FAIL("Invalid line: %s", line);
-
-        // Write the word into memory
-        write_word(s, addr, value);
-    }
+            // Write the word into memory
+            write_word(s, addr, value);
+        }
 
         line_no++;
     }
