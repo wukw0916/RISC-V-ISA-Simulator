@@ -1,3 +1,4 @@
+#include <ctype.h>
 #include <stdbool.h>
 #include <stdint.h>
 #include <stdio.h>
@@ -12,12 +13,13 @@
 bool verbose = 0;
 char* target_file = "program.mem";
 char* dump_mem_file = NULL;
-char* dump_reg_file = NULL;
+char* dump_reg_file = "-";
 uint32_t pc_init = 0x00000000;
-uint32_t sp_init = 0x0000FFF0;
-uint32_t simulation_size = 1 << 16;
+uint32_t sp_init = 65536;
+uint32_t simulation_size = 1 << 17;
 unsigned int instruction_limit = 0;
 bool ignore_zeros = false;
+bool interactive = false;
 
 void usage(char* message, int err) {
     FILE* fd = err == 0 ? stdout : stderr;
@@ -27,6 +29,7 @@ void usage(char* message, int err) {
     fprintf(fd, "--dump-registers <register_file>   Dump registers to a file (default: \"%s\")\n", dump_reg_file);
     fprintf(fd, "--ignore-zeros                     Memory/Register dumps will ignore zeros\n");
     fprintf(fd, "--instruction-limit <count>        Decimal limit for the number of instructions executed (default: %u)\n", instruction_limit);
+    fprintf(fd, "--interactive                      Run in interactive mode\n");
     fprintf(fd, "--load-file <config_file>          Decoded runtime code (default: \"%s\")\n", target_file);
     fprintf(fd, "--pc-init <addr>                   Hexadecimal value to start the program counter (default: %08X)\n", pc_init);
     fprintf(fd, "--simulation-size <bytes>          Hexadecimal value to specify the memory available to the simulator (default: %08X)\n", simulation_size);
@@ -80,6 +83,8 @@ int main(int argc, char* argv[]) {
             }
         } else if (strcmp("--verbose", argv[i]) == 0) {
             verbose = true;
+        } else if (strcmp("--interactive", argv[i]) == 0) {
+            interactive = true;
         } else if (strcmp("--help", argv[i]) == 0) {
             usage("", 0);
         } else {
@@ -114,14 +119,65 @@ int main(int argc, char* argv[]) {
         fclose(f);
 
         unsigned int exec_count = 0;
-        while (execute_simulation_step(&s)) {
+        unsigned int cont = true;
+        while (cont && execute_simulation_step(&s)) {
             if (instruction_limit > 0 && ++exec_count > instruction_limit)
                 FAIL("Instruction limit reached: %d", instruction_limit);
+
+            // Interactive
+            if (interactive && --cont == 0) {
+                cont = 1;
+                char line[255];
+                while (true) {
+                    printf(">>> ");
+                    if (fgets(line, sizeof(line), stdin) == NULL)
+                        break;
+                    if (strcmp(line, "\n") == 0)
+                        continue;
+                    // Parse the line into argc and argv
+                    char* argv[32] = { line };
+                    int argc = 1;
+                    int length = strlen(line);
+                    for (int i = 1; i < length; i++) {
+                        if (line[i-1] == 0)
+                            argv[argc++] = &line[i];
+                        if (line[i] == ' ' || line[i] == '\n') {
+                            line[i] = 0;
+                        }
+                    }
+                    // Parse arguments into commands
+                    if (strcmp(argv[0], "next") == 0) {
+                        if (argc > 1)
+                            cont = atoi(argv[1]);
+                        else
+                            cont = 1;
+                        break;
+                    } else if (strcmp(argv[0], "dump_registers") == 0) {
+                        bool ignore_zeros = 0;
+                        if (argc > 1)
+                            ignore_zeros = strcmp("--ignore-zeros", argv[1]) == 0;
+                        dump_registers_to_file(&s, stdout, ignore_zeros);
+                    } else if (strcmp(argv[0], "dump_memory") == 0) {
+                        bool ignore_zeros = 0;
+                        if (argc > 1)
+                            ignore_zeros = strcmp("--ignore-zeros", argv[1]) == 0;
+                        dump_memory_to_file(&s, stdout, 0, 0, ignore_zeros);
+                    } else if (strcmp(argv[0], "quit") == 0) {
+                        cont = 0;
+                        break;
+                    } else {
+                        printf("Usage:\n");
+                        printf("dump_memory [--ignore-zeros]\n");
+                        printf("dump_registers [--ignore-zeros]\n");
+                        printf("next <count>\n");
+                    }
+                }
+            }
         }
 
 
         FILE* mem_f;
-        if (dump_mem_file) {
+        if (dump_mem_file && strlen(dump_mem_file) > 0) {
             if (strcmp("-", dump_mem_file) == 0)
                 mem_f = stdout;
             else if ((mem_f = fopen(dump_mem_file, "w+")) == NULL)
@@ -133,10 +189,12 @@ int main(int argc, char* argv[]) {
             if (mem_f != stdout && strcmp(dump_mem_file, dump_reg_file) != 0)
                 fclose(mem_f);
         }
-        if (dump_reg_file) {
+        if (dump_reg_file && strlen(dump_reg_file) > 0) {
             FILE* reg_f;
-            if (strcmp(dump_mem_file, dump_reg_file) == 0)
+            if (dump_mem_file && strcmp(dump_mem_file, dump_reg_file) == 0)
                 reg_f = mem_f;
+            else if (strcmp("-", dump_reg_file) == 0)
+                reg_f = stdout;
             else if ((reg_f = fopen(dump_reg_file, "w+")) == NULL)
                 WARN_SYS("Unable to open dump mem file: %s", dump_reg_file);
 
