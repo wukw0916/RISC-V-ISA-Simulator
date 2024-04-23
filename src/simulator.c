@@ -128,11 +128,13 @@ int8_t read_sbyte(simulator* s, uint32_t addr) read_memory(s, addr, int8_t)
 
 // register read
 uint32_t read_register(simulator* s, REGISTER reg) {
-    if (reg > 32)
-        FAIL("Invalid register read: %d", reg);
+
     if (reg == REG_ZERO)
         return 0;
-    return s->reg[reg];
+    int reg_reduced = reg - 1;      // REG_ZERO is not real
+    if (reg_reduced > length(s->reg))
+        FAIL("Invalid register write: %d", reg);
+    return s->reg[reg_reduced];
 }
 
 int32_t read_register_signed(simulator* s, REGISTER reg) {
@@ -142,11 +144,13 @@ int32_t read_register_signed(simulator* s, REGISTER reg) {
 
 // register write
 void write_register(simulator* s, REGISTER reg, uint32_t data) {
-    if (reg > 32)
-        FAIL("Invalid register write: %d", reg);
+
     if (reg == REG_ZERO)
         return;
-    s->reg[reg] = data;
+    int reg_reduced = reg - 1;      // REG_ZERO is not real
+    if (reg_reduced > length(s->reg))
+        FAIL("Invalid register write: %d", reg);
+    s->reg[reg_reduced] = data;
 }
 
 void write_register_signed(simulator* s, REGISTER reg, int32_t data) {
