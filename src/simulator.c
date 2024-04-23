@@ -256,19 +256,21 @@ bool execute_simulation_step(simulator* s) {
         WARN("PC is not aligned");
     // No need to check OOB, read_word returns 0 on invalid memory
     uint32_t encoded_instruction = read_word(s, pc);
-    if (encoded_instruction == 0)
+    if (encoded_instruction == 0) {
+        INFO("Instruction [%08X] %08X", pc, encoded_instruction);
         return false;
+    }
 
     int instruction_matches = count_all_instruction_matches(encoded_instruction);
     if (instruction_matches > 1) {
-        WARN("Encoded instruction matches more than 1 operation");
+        WARN("Instruction [%08X] %08X: Matches more than 1 instruction", pc, encoded_instruction);
         return true;
     } else if (instruction_matches == 0) {
-        WARN("No known instruction for %08X", encoded_instruction);
+        WARN("Instruction [%08X] %08X: No known instruction", pc, encoded_instruction);
         return true;
     }
-    
-    INFO("Instruction: %s", format_instruction(encoded_instruction));
+
+    INFO("Instruction [%08X] %08X: %s", pc, encoded_instruction, format_instruction(encoded_instruction));
 
     R_INSTRUCTION r_instruction = as_r_instruction(encoded_instruction);
     // I_INSTRUCTION i_instruction = as_i_instruction(encoded_instruction);
