@@ -14,7 +14,7 @@ for i in "$DIR"/*.mem ; do
     CHECK_FILE="$DIR/$NO_EXT.check"
     if [ -e "$CHECK_FILE" ] ; then
         OUTFILE="$(mktemp)"
-        ./build/riscv_simulator \
+        ./build/egp01_simulator \
                 --verbose \
                 --load-file "$i" \
                 --dump-memory - \

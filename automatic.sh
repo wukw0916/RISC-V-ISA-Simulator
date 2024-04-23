@@ -94,6 +94,11 @@ run_all_instruction_tests() {
     exit "$((FAILING>0))"
 }
 
+# run-all-end-to-end-tests
+run_all_end_to_end_tests(){
+    ./tools/run_end_to_end_tests
+}
+
 # Main entry point
 main() {
     compile_program
@@ -104,6 +109,7 @@ main() {
     compile_generated_code
     fail_if_not_up_to_date
     # run_all_instruction_tests
+    run_all_end_to_end_tests
 }
 
 # Execute the main function
