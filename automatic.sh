@@ -99,6 +99,11 @@ run_all_end_to_end_tests(){
     ./tools/run_end_to_end_tests
 }
 
+# run-valgrind
+run_valgrind(){
+    "valgrind ./build/egp01_simulator --verbose --load-file example.mem 2>&1 | grep 'ERROR SUMMARY: 0 errors'"
+}
+
 # Main entry point
 main() {
     compile_program
@@ -110,6 +115,7 @@ main() {
     fail_if_not_up_to_date
     # run_all_instruction_tests
     run_all_end_to_end_tests
+    # run_valgrind
 }
 
 # Execute the main function
