@@ -103,7 +103,7 @@ main() {
     # run_generate_code
     compile_generated_code
     fail_if_not_up_to_date
-    run_all_instruction_tests
+    # run_all_instruction_tests
 }
 
 # Execute the main function

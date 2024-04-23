@@ -50,7 +50,6 @@ if [ -n "$RUN" ] ; then
             EXECUTABLE_NAME="${EXECUTABLE/*\/}"
             EXECUTABLE_DIR="${EXECUTABLE/"$EXECUTABLE_NAME"}"
             if [ -x "$EXECUTABLE" ] ; then
-                if "$EXECUTABLE" ; then
                 if (cd "$EXECUTABLE_DIR" ; "./$EXECUTABLE_NAME") ; then
                     echo "$EXECUTABLE: SUCCESS" >&2
                 else
