@@ -63,6 +63,8 @@ R_INSTRUCTION as_r_instruction(uint32_t instruction);
 #define TYPE_FADD = 0b00;
 bool is_slt_instruction(const R_INSTRUCTION* decoded_instruction);
 
+int count_all_instruction_matches(uint32_t encoded_instruction);
+
 // const uint8_t OPCODE_SUB = 0b0110011;
 // const uint8_t FUNC3_SUB = 0b000;
 // const uint8_t FUNC7_SUB = 0b0100000;
