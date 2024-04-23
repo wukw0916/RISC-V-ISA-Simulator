@@ -9,7 +9,6 @@ typedef struct {
     uint32_t mem_bytes;
 } simulator;
 
-// 定义寄存器信息的基础设施
 typedef enum {
     REG_ZERO = 0,
     REG_RA = 1,
@@ -48,11 +47,11 @@ typedef enum {
 
 void simulator_init(simulator *s, uint32_t mem_bytes);
 void simulator_destroy(simulator *s);
-void display_memory(simulator *s, uint32_t start_addr, uint32_t length);
-void display_registers(simulator *s);
-int read_file_to_memory(simulator *s, FILE *f); //添加文件读取功能函数
-int dump_memory_to_file(simulator *s, FILE *f, uint32_t start_addr, uint32_t length);
-int dump_registers_to_file(simulator *s, FILE *f);
+void display_memory(simulator *s, uint32_t start_addr, uint32_t length, bool ignore_zeros);
+void display_registers(simulator *s, bool ignore_zeros);
+int read_file_to_memory(simulator *s, FILE *f);
+int dump_memory_to_file(simulator *s, FILE *f, uint32_t start_addr, uint32_t length, bool ignore_zeros);
+int dump_registers_to_file(simulator *s, FILE *f, bool ignore_zeros);
 void write_word(simulator *s, uint32_t addr, uint32_t data);
 void write_hword(simulator *s, uint32_t addr, uint16_t data);
 void write_byte(simulator *s, uint32_t addr, uint8_t data);
@@ -66,8 +65,8 @@ uint32_t read_register(simulator *s, REGISTER reg);
 int32_t read_register_signed(simulator *s, REGISTER reg);
 void write_register(simulator *s, REGISTER reg, uint32_t data);
 void write_register_signed(simulator *s, REGISTER reg, int32_t data);
-const char* register_to_name(REGISTER reg);
-REGISTER register_from_name(char* name);
+const char *register_to_name(REGISTER reg);
+REGISTER register_from_name(char *name);
 bool execute_simulation_step(simulator *s);
 
 #endif

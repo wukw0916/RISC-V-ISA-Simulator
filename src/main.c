@@ -10,13 +10,14 @@
 
 
 bool verbose = 0;
-char* target_file = "prog.mem";
+char* target_file = "program.mem";
 char* dump_mem_file = NULL;
 char* dump_reg_file = NULL;
 uint32_t pc_init = 0x00000000;
 uint32_t sp_init = 0x0000FFF0;
 uint32_t simulation_size = 1 << 16;
 unsigned int instruction_limit = 0;
+bool ignore_zeros = false;
 
 void usage(char* message, int err) {
     FILE* fd = err == 0 ? stdout : stderr;
@@ -24,11 +25,12 @@ void usage(char* message, int err) {
 
     fprintf(fd, "--dump-memory <memory_file>        Dump memory to a file (default: \"%s\")\n", dump_mem_file);
     fprintf(fd, "--dump-registers <register_file>   Dump registers to a file (default: \"%s\")\n", dump_reg_file);
-    fprintf(fd, "--instruction-limit <count>        Limit the number of instructions executed (default: %u)\n", instruction_limit);
+    fprintf(fd, "--ignore-zeros                     Memory/Register dumps will ignore zeros\n");
+    fprintf(fd, "--instruction-limit <count>        Decimal limit for the number of instructions executed (default: %u)\n", instruction_limit);
     fprintf(fd, "--load-file <config_file>          Decoded runtime code (default: \"%s\")\n", target_file);
     fprintf(fd, "--pc-init <addr>                   Hexadecimal value to start the program counter (default: %08X)\n", pc_init);
-    fprintf(fd, "--simulation-size <bytes>          Decimal value to specify the stack address (default: %08X)\n", simulation_size);
-    fprintf(fd, "--sp-init <addr>                   Decimal value to specify the stack address (default: %08X)\n", sp_init);
+    fprintf(fd, "--simulation-size <bytes>          Hexadecimal value to specify the memory available to the simulator (default: %08X)\n", simulation_size);
+    fprintf(fd, "--sp-init <addr>                   Hexadecimal value to specify the stack address (default: %08X)\n", sp_init);
     fprintf(fd, "--verbose                          Show extra verbose information\n");
 
     fprintf(fd, "--help                             Show this help dialog\n");
@@ -37,6 +39,11 @@ void usage(char* message, int err) {
 
 int main(int argc, char* argv[]) {
     int err;
+
+    if (argc <= 1) {
+        WARN("No arguments specified");
+        WARN("Use the --help flag to see usage information");
+    }
 
     // Parse Input Arguments
     for (int i = 1 ; i < argc ; i++) {
@@ -64,6 +71,8 @@ int main(int argc, char* argv[]) {
             if ((err = sscanf(argv[i], "%d", &instruction_limit)) != 1) {
                 fprintf(stderr, "Invalid format for --instruction-limit\n");
             }
+        } else if (strcmp("--ignore-zeros", argv[i]) == 0) {
+            ignore_zeros = true;
         } else if (strcmp("--simulation-size", argv[i]) == 0) {
             i++;
             if ((err = sscanf(argv[i], "%X", &simulation_size)) != 1) {
@@ -110,28 +119,29 @@ int main(int argc, char* argv[]) {
                 FAIL("Instruction limit reached: %d", instruction_limit);
         }
 
+
+        FILE* mem_f;
         if (dump_mem_file) {
-            FILE* mem_f;
             if (strcmp("-", dump_mem_file) == 0)
                 mem_f = stdout;
             else if ((mem_f = fopen(dump_mem_file, "w+")) == NULL)
                 WARN_SYS("Unable to open dump mem file: %s", dump_mem_file);
 
             if (mem_f != NULL)
-                dump_memory_to_file(&s, mem_f, 0, 0);
+                dump_memory_to_file(&s, mem_f, 0, 0, ignore_zeros);
 
-            if (mem_f != stdout)
+            if (mem_f != stdout && strcmp(dump_mem_file, dump_reg_file) != 0)
                 fclose(mem_f);
         }
         if (dump_reg_file) {
             FILE* reg_f;
-            if (strcmp("-", dump_reg_file) == 0)
-                reg_f = stdout;
+            if (strcmp(dump_mem_file, dump_reg_file) == 0)
+                reg_f = mem_f;
             else if ((reg_f = fopen(dump_reg_file, "w+")) == NULL)
                 WARN_SYS("Unable to open dump mem file: %s", dump_reg_file);
 
             if (reg_f != NULL)
-                dump_registers_to_file(&s, reg_f);
+                dump_registers_to_file(&s, reg_f, ignore_zeros);
 
             if (reg_f != stdout)
                 fclose(reg_f);
