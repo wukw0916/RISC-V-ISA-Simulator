@@ -114,6 +114,7 @@ int dump_registers_to_file(simulator* s, FILE* f) {
         WARN("Unaligned memory write access: %08X", addr);\
         return;\
     }\
+    INFO("Write %s: [%08X] %08X", #data_type, addr, data);\
     *((data_type*) (s->memory + addr)) = data;\
 }
 
