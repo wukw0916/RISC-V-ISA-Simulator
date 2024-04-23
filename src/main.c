@@ -24,8 +24,9 @@ void usage(char* message, int err) {
     fprintf(fd, "--dump-memory <memory_file>        Dump memory to a file (default: \"%s\")\n", dump_mem_file);
     fprintf(fd, "--dump-registers <register_file>    Dump registers to a file (default: \"%s\")\n", dump_reg_file);
     fprintf(fd, "--load-file <config_file>          Decoded runtime code (default: \"%s\")\n", target_file);
-    fprintf(fd, "--pc-init <addr>                   Hexadecimal value to start the program counter (default: 0x00000000)\n");
-    fprintf(fd, "--sp-init <addr>                   Decimal value to specify the stack address (default: 65535)\n");
+    fprintf(fd, "--pc-init <addr>                   Hexadecimal value to start the program counter (default: %08X)\n", pc_init);
+    fprintf(fd, "--sp-init <addr>                   Decimal value to specify the stack address (default: %08X)\n", sp_init);
+    fprintf(fd, "--simulation-size <bytes>          Decimal value to specify the stack address (default: %08X)\n", simulation_size);
     fprintf(fd, "--verbose                          Show extra verbose information\n");
 
     fprintf(fd, "--help                             Show this help dialog\n");
@@ -56,14 +57,19 @@ int main(int argc, char* argv[]) {
             if ((err = sscanf(argv[i], "%X", &sp_init)) != 1) {
                 fprintf(stderr, "Invalid format for --sp-init\n");
             }
+        } else if (strcmp("--simulation-size", argv[i]) == 0) {
+            i++;
+            if ((err = sscanf(argv[i], "%X", &simulation_size)) != 1) {
+                fprintf(stderr, "Invalid format for --simulation-size\n");
+            }
         } else if (strcmp("--verbose", argv[i]) == 0) {
             verbose = true;
         } else if (strcmp("--help", argv[i]) == 0) {
             usage("", 0);
         } else {
             const char* fmt = "Unknown flag `%s`";
-            char* buf = malloc(strlen(fmt) + strlen(argv[i]));
-            sprintf(buf, fmt, argv[1]);
+            char buf[255];
+            sprintf(buf, fmt, argv[i]);
             usage(buf, 1);
         }
     }
@@ -77,11 +83,11 @@ int main(int argc, char* argv[]) {
         FILE *f;
         if ((f = fopen(target_file, "r+")) == NULL)
             FAIL_SYS("Unable to open input file: %s", target_file);
-            
-    // init simulator
+
+        // Initialize a simulator
         simulator s;
         simulator_init(&s, simulation_size);
-        s.pc = pc_init; // init pc
+        s.pc = pc_init;
         write_register(&s, REG_SP, sp_init);
 
         // Read file and write its values to memory
@@ -90,8 +96,6 @@ int main(int argc, char* argv[]) {
             FAIL("File is empty");
 
         fclose(f);
-        
-
 
         /*Execution loop*/
         while (execute_simulation_step(&s)) { }
@@ -103,10 +107,11 @@ int main(int argc, char* argv[]) {
             else if ((mem_f = fopen(dump_mem_file, "w+")) == NULL)
                 WARN_SYS("Unable to open dump mem file: %s", dump_mem_file);
 
-            if (mem_f != NULL) {
+            if (mem_f != NULL)
                 dump_memory_to_file(&s, mem_f, 0, 0);
+
+            if (mem_f != stdout)
                 fclose(mem_f);
-            }
         }
         if (dump_reg_file) {
             FILE* reg_f;
@@ -115,17 +120,17 @@ int main(int argc, char* argv[]) {
             else if ((reg_f = fopen(dump_reg_file, "w+")) == NULL)
                 WARN_SYS("Unable to open dump mem file: %s", dump_reg_file);
 
-            if (reg_f != NULL) {
+            if (reg_f != NULL)
                 dump_registers_to_file(&s, reg_f);
+
+            if (reg_f != stdout)
                 fclose(reg_f);
-            }
         }
         printf("Execution halted at PC: %08X", s.pc);
 
-                simulator_destroy(&s);
-                exit(EXIT_SUCCESS);
-                printf("Shouldn't see this if execution halted\n"); //There to prove that the sim actually halts
-
+        simulator_destroy(&s);
+        exit(EXIT_SUCCESS);
+        printf("Shouldn't see this if execution halted\n"); //There to prove that the sim actually halts
     } else {
         usage("Target file not specified", 1);
     }
