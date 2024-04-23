@@ -334,7 +334,7 @@ bool execute_simulation_step(simulator* s) {
     //     WARN("Unimplemented operation: SHU");
     //     return true;
     // }
-
+    WARN("Unknown operation: %08X", encoded_instruction);
     return true;
 }
 
