@@ -135,6 +135,11 @@ uint32_t read_register(simulator* s, REGISTER reg) {
     return s->reg[reg];
 }
 
+int32_t read_register_signed(simulator* s, REGISTER reg) {
+    uint32_t value = read_register(s, reg);
+    return *(int32_t*) (&value);
+}
+
 // register write
 void write_register(simulator* s, REGISTER reg, uint32_t data) {
     if (reg > 32)
@@ -142,6 +147,10 @@ void write_register(simulator* s, REGISTER reg, uint32_t data) {
     if (reg == REG_ZERO)
         return;
     s->reg[reg] = data;
+}
+
+void write_register_signed(simulator* s, REGISTER reg, int32_t data) {
+    write_register(s, reg, *(uint32_t*) (&data));
 }
 
 // Make GCC refuse to compile if we use the wrong instruction type
