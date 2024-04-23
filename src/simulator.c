@@ -164,13 +164,18 @@ void write_register_signed(simulator* s, REGISTER reg, int32_t data) {
 bool execute_simulation_step(simulator* s) {
     uint32_t pc = s->pc;
     s->pc += 4;
-    
+
+    if (pc % 4 != 0)
+        WARN("PC is not aligned");
     // No need to check OOB, read_word returns 0 on invalid memory
     uint32_t encoded_instruction = read_word(s, pc);
     if (encoded_instruction == 0) {
         INFO("Execution halted at PC: %08X", pc);
         return false;
     }
+
+    if (count_all_instruction_matches(encoded_instruction) > 1)
+        FAIL("Encoded instruction matches more than 1 operation");
 
     R_INSTRUCTION r_instruction = as_r_instruction(encoded_instruction);
     // I_INSTRUCTION i_instruction = as_i_instruction(encoded_instruction);
