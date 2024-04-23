@@ -6,6 +6,8 @@
 #include "core.h"
 #include "instructions.h"
 
+char format_memory[64];
+
 #define get_word_bits(instruction, start, end) \
     ((instruction >> start) & (((uint32_t) ~0) >> (32 + start - end)))
 
@@ -239,6 +241,30 @@ int count_all_instruction_matches(uint32_t encoded_instruction) {
     // count += is_sbu_instruction(&s_instruction);
     // count += is_shu_instruction(&s_instruction);
     return count;
+}
+
+
+char* format_instruction(uint32_t encoded_instruction) {
+    R_INSTRUCTION r_instruction = as_r_instruction(encoded_instruction);
+    // I_INSTRUCTION i_instruction = as_i_instruction(encoded_instruction);
+    // S_INSTRUCTION s_instruction = as_s_instruction(encoded_instruction);
+    // U_INSTRUCTION u_instruction = as_u_instruction(encoded_instruction);
+    // B_INSTRUCTION b_instruction = as_b_instruction(encoded_instruction);
+    // J_INSTRUCTION j_instruction = as_j_instruction(encoded_instruction);
+
+    if (is_slt_instruction(&r_instruction)) return format_slt_operation(&r_instruction);
+    return NULL;
+}
+
+
+char* format_slt_operation(R_INSTRUCTION* decoded_instruction) {
+    if (!is_slt_instruction(decoded_instruction)) return NULL;
+    sprintf(format_memory, "SLT <rd=%s> <rs1=%s> <rs2=%s>",
+        register_to_name(decoded_instruction->rd),
+        register_to_name(decoded_instruction->rs1),
+        register_to_name(decoded_instruction->rs2)
+    );
+    return format_memory;
 }
 
 // bool is_sub_instruction(uint32_t instruction, R_INSTRUCTION* decoded_instruction) {
