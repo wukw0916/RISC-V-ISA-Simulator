@@ -57,10 +57,10 @@ R_INSTRUCTION as_r_instruction(uint32_t instruction);
 // } S_INSTRUCTION;
 // S_INSTRUCTION as_s_instruction(uint32_t instruction);
 
-#define OP0_FADD = 0b0000;
-#define OP1_FADD = 0b011;
-#define OP2_FADD = 0b00;
-#define TYPE_FADD = 0b00;
+#define OP0_SLT = 0b0000;
+#define OP1_SLT = 0b011;
+#define OP2_SLT = 0b00;
+#define TYPE_SLT = 0b00;
 bool is_slt_instruction(const R_INSTRUCTION* decoded_instruction);
 
 int count_all_instruction_matches(uint32_t encoded_instruction);
