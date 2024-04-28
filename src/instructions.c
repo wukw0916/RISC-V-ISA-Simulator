@@ -352,7 +352,7 @@ bool is_fadd_instruction(const R_INSTRUCTION* decoded_instruction) {
     if (decoded_instruction->op0 != 0b0000) return false;
     if (decoded_instruction->op1 != 0b111) return false;
     if (decoded_instruction->op2 != 0b00) return false;
-    if (decoded_instruction->rnd != 0b00) return false;
+    if (decoded_instruction->type != 0b00) return false;
     return true;
 }
 
@@ -361,7 +361,7 @@ bool is_fsub_instruction(const R_INSTRUCTION* decoded_instruction) {
     if (decoded_instruction->op0 != 0b0000) return false;
     if (decoded_instruction->op1 != 0b111) return false;
     if (decoded_instruction->op2 != 0b01) return false;
-    if (decoded_instruction->rnd != 0b00) return false;
+    if (decoded_instruction->type != 0b00) return false;
     return true;
 }
 
@@ -370,7 +370,7 @@ bool is_fmul_instruction(const R_INSTRUCTION* decoded_instruction) {
     if (decoded_instruction->op0 != 0b0000) return false;
     if (decoded_instruction->op1 != 0b111) return false;
     if (decoded_instruction->op2 != 0b10) return false;
-    if (decoded_instruction->rnd != 0b00) return false;
+    if (decoded_instruction->type != 0b00) return false;
     return true;
 }
 
@@ -379,7 +379,7 @@ bool is_fdiv_instruction(const R_INSTRUCTION* decoded_instruction) {
     if (decoded_instruction->op0 != 0b0000) return false;
     if (decoded_instruction->op1 != 0b111) return false;
     if (decoded_instruction->op2 != 0b11) return false;
-    if (decoded_instruction->rnd != 0b00) return false;
+    if (decoded_instruction->type != 0b00) return false;
     return true;
 }
 
