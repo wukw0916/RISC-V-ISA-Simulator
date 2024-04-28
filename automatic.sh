@@ -43,6 +43,7 @@ compile_program() {
 # Run example
 run_example() {
     ./build/egp01_simulator --verbose --load-file tests/end_to_end/slt_tests.mem
+    ./build/egp01_simulator --verbose --load-file example.mem
 }
 
 # build instruction_tests
