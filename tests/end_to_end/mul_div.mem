@@ -8,7 +8,7 @@ REG_T5:ffff0000
 #explicitly assign PC
 PC:0
 #Load instructions -Results stored to REG_S1-S9
-0:2450B170 //MUL
-4:3450B170 //DIV
-8:0450B170 //ADD
-c:1450B170 //SUB
+0:0450B170 //ADD
+4:1450B170 //SUB
+8:2050B170 //SHR
+c:1050B170 //SHL
