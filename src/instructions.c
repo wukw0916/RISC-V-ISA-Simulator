@@ -184,12 +184,202 @@ R_INSTRUCTION as_r_instruction(uint32_t instruction) {
 //     };
 // }
 
+bool is_shl_instruction(const R_INSTRUCTION* decoded_instruction) {
+    if (decoded_instruction == NULL) FAIL("Received NULL pointer on is_shl_instruction");
+    if (decoded_instruction->op0 != 0b0000) return false;
+    if (decoded_instruction->op1 != 0b000) return false;
+    if (decoded_instruction->op2 != 0b01) return false;
+    if (decoded_instruction->type != 0b00) return false;
+    return true;
+}
+
+bool is_shr_instruction(const R_INSTRUCTION* decoded_instruction) {
+    if (decoded_instruction == NULL) FAIL("Received NULL pointer on is_shr_instruction");
+    if (decoded_instruction->op0 != 0b0000) return false;
+    if (decoded_instruction->op1 != 0b000) return false;
+    if (decoded_instruction->op2 != 0b10) return false;
+    if (decoded_instruction->type != 0b00) return false;
+    return true;
+}
+
+bool is_and_instruction(const R_INSTRUCTION* decoded_instruction) {
+    if (decoded_instruction == NULL) FAIL("Received NULL pointer on is_and_instruction");
+    if (decoded_instruction->op0 != 0b0000) return false;
+    if (decoded_instruction->op1 != 0b000) return false;
+    if (decoded_instruction->op2 != 0b11) return false;
+    if (decoded_instruction->type != 0b00) return false;
+    return true;
+}
+
+bool is_or_instruction(const R_INSTRUCTION* decoded_instruction) {
+    if (decoded_instruction == NULL) FAIL("Received NULL pointer on is_or_instruction");
+    if (decoded_instruction->op0 != 0b0000) return false;
+    if (decoded_instruction->op1 != 0b000) return false;
+    if (decoded_instruction->op2 != 0b11) return false;
+    if (decoded_instruction->type != 0b01) return false;
+    return true;
+}
+
+bool is_not_instruction(const R_INSTRUCTION* decoded_instruction) {
+    if (decoded_instruction == NULL) FAIL("Received NULL pointer on is_not_instruction");
+    if (decoded_instruction->op0 != 0b0000) return false;
+    if (decoded_instruction->op1 != 0b000) return false;
+    if (decoded_instruction->op2 != 0b11) return false;
+    if (decoded_instruction->type != 0b10) return false;
+    return true;
+}
+
+bool is_xor_instruction(const R_INSTRUCTION* decoded_instruction) {
+    if (decoded_instruction == NULL) FAIL("Received NULL pointer on is_xor_instruction");
+    if (decoded_instruction->op0 != 0b0000) return false;
+    if (decoded_instruction->op1 != 0b000) return false;
+    if (decoded_instruction->op2 != 0b11) return false;
+    if (decoded_instruction->type != 0b11) return false;
+    return true;
+}
+
+bool is_add_instruction(const R_INSTRUCTION* decoded_instruction) {
+    if (decoded_instruction == NULL) FAIL("Received NULL pointer on is_add_instruction");
+    if (decoded_instruction->op0 != 0b0000) return false;
+    if (decoded_instruction->op1 != 0b010) return false;
+    if (decoded_instruction->op2 != 0b00) return false;
+    if (decoded_instruction->type != 0b00) return false;
+    return true;
+}
+
+bool is_sub_instruction(const R_INSTRUCTION* decoded_instruction) {
+    if (decoded_instruction == NULL) FAIL("Received NULL pointer on is_add_instruction");
+    if (decoded_instruction->op0 != 0b0000) return false;
+    if (decoded_instruction->op1 != 0b010) return false;
+    if (decoded_instruction->op2 != 0b01) return false;
+    if (decoded_instruction->type != 0b00) return false;
+    return true;
+}
+
+bool is_mul_instruction(const R_INSTRUCTION* decoded_instruction) {
+    if (decoded_instruction == NULL) FAIL("Received NULL pointer on is_mul_instruction");
+    if (decoded_instruction->op0 != 0b0000) return false;
+    if (decoded_instruction->op1 != 0b010) return false;
+    if (decoded_instruction->op2 != 0b10) return false;
+    if (decoded_instruction->type != 0b00) return false;
+    return true;
+}
+
+bool is_div_instruction(const R_INSTRUCTION* decoded_instruction) {
+    if (decoded_instruction == NULL) FAIL("Received NULL pointer on is_div_instruction");
+    if (decoded_instruction->op0 != 0b0000) return false;
+    if (decoded_instruction->op1 != 0b010) return false;
+    if (decoded_instruction->op2 != 0b11) return false;
+    if (decoded_instruction->type != 0b00) return false;
+    return true;
+}
+
 bool is_slt_instruction(const R_INSTRUCTION* decoded_instruction) {
     if (decoded_instruction == NULL) FAIL("Received NULL pointer on is_slt_instruction");
     if (decoded_instruction->op0 != 0b0000) return false;
     if (decoded_instruction->op1 != 0b011) return false;
     if (decoded_instruction->op2 != 0b00) return false;
     if (decoded_instruction->type != 0b00) return false;
+    return true;
+}
+
+bool is_sle_instruction(const R_INSTRUCTION* decoded_instruction) {
+    if (decoded_instruction == NULL) FAIL("Received NULL pointer on is_sle_instruction");
+    if (decoded_instruction->op0 != 0b0000) return false;
+    if (decoded_instruction->op1 != 0b011) return false;
+    if (decoded_instruction->op2 != 0b01) return false;
+    if (decoded_instruction->type != 0b00) return false;
+    return true;
+}
+
+bool is_seq_instruction(const R_INSTRUCTION* decoded_instruction) {
+    if (decoded_instruction == NULL) FAIL("Received NULL pointer on is_seq_instruction");
+    if (decoded_instruction->op0 != 0b0000) return false;
+    if (decoded_instruction->op1 != 0b011) return false;
+    if (decoded_instruction->op2 != 0b10) return false;
+    if (decoded_instruction->type != 0b00) return false;
+    return true;
+}
+
+bool is_sne_instruction(const R_INSTRUCTION* decoded_instruction) {
+    if (decoded_instruction == NULL) FAIL("Received NULL pointer on is_sne_instruction");
+    if (decoded_instruction->op0 != 0b0000) return false;
+    if (decoded_instruction->op1 != 0b011) return false;
+    if (decoded_instruction->op2 != 0b11) return false;
+    if (decoded_instruction->type != 0b00) return false;
+    return true;
+}
+
+bool is_min_instruction(const R_INSTRUCTION* decoded_instruction) {
+    if (decoded_instruction == NULL) FAIL("Received NULL pointer on is_min_instruction");
+    if (decoded_instruction->op0 != 0b0000) return false;
+    if (decoded_instruction->op1 != 0b100) return false;
+    if (decoded_instruction->op2 != 0b00) return false;
+    if (decoded_instruction->type != 0b00) return false;
+    return true;
+}
+
+bool is_max_instruction(const R_INSTRUCTION* decoded_instruction) {
+    if (decoded_instruction == NULL) FAIL("Received NULL pointer on is_min_instruction");
+    if (decoded_instruction->op0 != 0b0000) return false;
+    if (decoded_instruction->op1 != 0b100) return false;
+    if (decoded_instruction->op2 != 0b01) return false;
+    if (decoded_instruction->type != 0b00) return false;
+    return true;
+}
+
+bool is_rem_instruction(const R_INSTRUCTION* decoded_instruction) {
+    if (decoded_instruction == NULL) FAIL("Received NULL pointer on is_rem_instruction");
+    if (decoded_instruction->op0 != 0b0000) return false;
+    if (decoded_instruction->op1 != 0b100) return false;
+    if (decoded_instruction->op2 != 0b10) return false;
+    if (decoded_instruction->type != 0b00) return false;
+    return true;
+}
+
+bool is_mod_instruction(const R_INSTRUCTION* decoded_instruction) {
+    if (decoded_instruction == NULL) FAIL("Received NULL pointer on is_mod_instruction");
+    if (decoded_instruction->op0 != 0b0000) return false;
+    if (decoded_instruction->op1 != 0b100) return false;
+    if (decoded_instruction->op2 != 0b11) return false;
+    if (decoded_instruction->type != 0b00) return false;
+    return true;
+}
+
+// # R-rnd
+bool is_fadd_instruction(const R_INSTRUCTION* decoded_instruction) {
+    if (decoded_instruction == NULL) FAIL("Received NULL pointer on is_fadd_instruction");
+    if (decoded_instruction->op0 != 0b0000) return false;
+    if (decoded_instruction->op1 != 0b111) return false;
+    if (decoded_instruction->op2 != 0b00) return false;
+    if (decoded_instruction->rnd != 0b00) return false;
+    return true;
+}
+
+bool is_fsub_instruction(const R_INSTRUCTION* decoded_instruction) {
+    if (decoded_instruction == NULL) FAIL("Received NULL pointer on is_fsub_instruction");
+    if (decoded_instruction->op0 != 0b0000) return false;
+    if (decoded_instruction->op1 != 0b111) return false;
+    if (decoded_instruction->op2 != 0b01) return false;
+    if (decoded_instruction->rnd != 0b00) return false;
+    return true;
+}
+
+bool is_fmul_instruction(const R_INSTRUCTION* decoded_instruction) {
+    if (decoded_instruction == NULL) FAIL("Received NULL pointer on is_fmul_instruction");
+    if (decoded_instruction->op0 != 0b0000) return false;
+    if (decoded_instruction->op1 != 0b111) return false;
+    if (decoded_instruction->op2 != 0b10) return false;
+    if (decoded_instruction->rnd != 0b00) return false;
+    return true;
+}
+
+bool is_fdiv_instruction(const R_INSTRUCTION* decoded_instruction) {
+    if (decoded_instruction == NULL) FAIL("Received NULL pointer on is_fdiv_instruction");
+    if (decoded_instruction->op0 != 0b0000) return false;
+    if (decoded_instruction->op1 != 0b111) return false;
+    if (decoded_instruction->op2 != 0b11) return false;
+    if (decoded_instruction->rnd != 0b00) return false;
     return true;
 }
 
@@ -201,45 +391,28 @@ int count_all_instruction_matches(uint32_t encoded_instruction) {
     // U_INSTRUCTION u_instruction = as_u_instruction(encoded_instruction);
     // B_INSTRUCTION b_instruction = as_b_instruction(encoded_instruction);
     // J_INSTRUCTION j_instruction = as_j_instruction(encoded_instruction);
-    // count += is_add_instruction(&r_instruction);
-    // count += is_sub_instruction(&r_instruction);
-    // count += is_sll_instruction(&r_instruction);
+    count += is_shl_instruction(&r_instruction);
+    count += is_shr_instruction(&r_instruction);
+    count += is_and_instruction(&r_instruction);
+    count += is_or_instruction(&r_instruction);
+    count += is_not_instruction(&r_instruction);
+    count += is_xor_instruction(&r_instruction);
+    count += is_add_instruction(&r_instruction);
+    count += is_sub_instruction(&r_instruction);
+    count += is_mul_instruction(&r_instruction);
+    count += is_div_instruction(&r_instruction);
     count += is_slt_instruction(&r_instruction);
-    // count += is_sltu_instruction(&r_instruction);
-    // count += is_xor_instruction(&r_instruction);
-    // count += is_srl_instruction(&r_instruction);
-    // count += is_sra_instruction(&r_instruction);
-    // count += is_or_instruction(&r_instruction);
-    // count += is_and_instruction(&r_instruction);
-    // count += is_addi_instruction(&i_instruction);
-    // count += is_slti_instruction(&i_instruction);
-    // count += is_sltiu_instruction(&i_instruction);
-    // count += is_xori_instruction(&i_instruction);
-    // count += is_ori_instruction(&i_instruction);
-    // count += is_andi_instruction(&i_instruction);
-    // count += is_slli_instruction(&i_instruction);
-    // count += is_srli_instruction(&i_instruction);
-    // count += is_srai_instruction(&i_instruction);
-    // count += is_beq_instruction(&b_instruction);
-    // count += is_bne_instruction(&b_instruction);
-    // count += is_blt_instruction(&b_instruction);
-    // count += is_bge_instruction(&b_instruction);
-    // count += is_bltu_instruction(&b_instruction);
-    // count += is_bgeu_instruction(&b_instruction);
-    // count += is_lui_instruction(&u_instruction);
-    // count += is_auipc_instruction(&u_instruction);
-    // count += is_jal_instruction(&j_instruction);
-    // count += is_jalr_instruction(&i_instruction);
-    // count += is_lb_instruction(&i_instruction);
-    // count += is_lh_instruction(&i_instruction);
-    // count += is_lw_instruction(&i_instruction);
-    // count += is_lbu_instruction(&i_instruction);
-    // count += is_lhu_instruction(&i_instruction);
-    // count += is_sb_instruction(&s_instruction);
-    // count += is_sh_instruction(&s_instruction);
-    // count += is_sw_instruction(&s_instruction);
-    // count += is_sbu_instruction(&s_instruction);
-    // count += is_shu_instruction(&s_instruction);
+    count += is_sle_instruction(&r_instruction);
+    count += is_seq_instruction(&r_instruction);
+    count += is_sne_instruction(&r_instruction);
+    count += is_min_instruction(&r_instruction);
+    count += is_max_instruction(&r_instruction);
+    count += is_rem_instruction(&r_instruction);
+    count += is_mod_instruction(&r_instruction);
+    count += is_fadd_instruction(&r_instruction);
+    count += is_fsub_instruction(&r_instruction);
+    count += is_fmul_instruction(&r_instruction);
+    count += is_fdiv_instruction(&r_instruction);
     return count;
 }
 
@@ -251,15 +424,244 @@ char* format_instruction(uint32_t encoded_instruction) {
     // U_INSTRUCTION u_instruction = as_u_instruction(encoded_instruction);
     // B_INSTRUCTION b_instruction = as_b_instruction(encoded_instruction);
     // J_INSTRUCTION j_instruction = as_j_instruction(encoded_instruction);
-
+    if (is_shl_instruction(&r_instruction)) return format_shl_operation(&r_instruction);
+    if (is_shr_instruction(&r_instruction)) return format_shr_operation(&r_instruction);
+    if (is_and_instruction(&r_instruction)) return format_and_operation(&r_instruction);
+    if (is_or_instruction(&r_instruction)) return format_or_operation(&r_instruction);
+    // if (is_not_instruction(&r_instruction)) return format_not_operation(&r_instruction);
+    if (is_xor_instruction(&r_instruction)) return format_xor_operation(&r_instruction);
+    if (is_add_instruction(&r_instruction)) return format_add_operation(&r_instruction);
+    if (is_sub_instruction(&r_instruction)) return format_sub_operation(&r_instruction);
+    if (is_mul_instruction(&r_instruction)) return format_mul_operation(&r_instruction);
+    if (is_div_instruction(&r_instruction)) return format_div_operation(&r_instruction);
     if (is_slt_instruction(&r_instruction)) return format_slt_operation(&r_instruction);
+    if (is_sle_instruction(&r_instruction)) return format_sle_operation(&r_instruction);
+    if (is_seq_instruction(&r_instruction)) return format_seq_operation(&r_instruction);
+    if (is_sne_instruction(&r_instruction)) return format_sne_operation(&r_instruction);
+    if (is_min_instruction(&r_instruction)) return format_min_operation(&r_instruction);
+    if (is_max_instruction(&r_instruction)) return format_max_operation(&r_instruction);
+    if (is_rem_instruction(&r_instruction)) return format_rem_operation(&r_instruction);
+    if (is_mod_instruction(&r_instruction)) return format_mod_operation(&r_instruction);
+    if (is_fadd_instruction(&r_instruction)) return format_fadd_operation(&r_instruction);
+    if (is_fsub_instruction(&r_instruction)) return format_fsub_operation(&r_instruction);
+    if (is_fmul_instruction(&r_instruction)) return format_fmul_operation(&r_instruction);
+    if (is_fdiv_instruction(&r_instruction)) return format_fdiv_operation(&r_instruction);
     return NULL;
 }
 
+char* format_shl_operation(R_INSTRUCTION* decoded_instruction) {
+    if (!is_shl_instruction(decoded_instruction)) return NULL;
+    sprintf(format_memory, "SHL <rd=%s> <rs1=%s> <rs2=%s>",
+        register_to_name(decoded_instruction->rd),
+        register_to_name(decoded_instruction->rs1),
+        register_to_name(decoded_instruction->rs2)
+    );
+    return format_memory;
+}
+
+char* format_shr_operation(R_INSTRUCTION* decoded_instruction) {
+    if (!is_shr_instruction(decoded_instruction)) return NULL;
+    sprintf(format_memory, "SHR <rd=%s> <rs1=%s> <rs2=%s>",
+        register_to_name(decoded_instruction->rd),
+        register_to_name(decoded_instruction->rs1),
+        register_to_name(decoded_instruction->rs2)
+    );
+    return format_memory;
+}
+
+char* format_and_operation(R_INSTRUCTION* decoded_instruction) {
+    if (!is_and_instruction(decoded_instruction)) return NULL;
+    sprintf(format_memory, "AND <rd=%s> <rs1=%s> <rs2=%s>",
+        register_to_name(decoded_instruction->rd),
+        register_to_name(decoded_instruction->rs1),
+        register_to_name(decoded_instruction->rs2)
+    );
+    return format_memory;
+}
+
+char* format_or_operation(R_INSTRUCTION* decoded_instruction) {
+    if (!is_or_instruction(decoded_instruction)) return NULL;
+    sprintf(format_memory, "OR <rd=%s> <rs1=%s> <rs2=%s>",
+        register_to_name(decoded_instruction->rd),
+        register_to_name(decoded_instruction->rs1),
+        register_to_name(decoded_instruction->rs2)
+    );
+    return format_memory;
+}
+
+// char* format_not_operation(R_INSTRUCTION* decoded_instruction) {
+//     if (!is_not_instruction(decoded_instruction)) return NULL;
+//     sprintf(format_memory, "NOT <rd=%s> <rs1=%s> <rs2=%s>",
+//         register_to_name(decoded_instruction->rd),
+//         register_to_name(decoded_instruction->rs1),
+//         register_to_name(decoded_instruction->rs2)
+//     );
+//     return format_memory;
+// }
+
+char* format_xor_operation(R_INSTRUCTION* decoded_instruction) {
+    if (!is_xor_instruction(decoded_instruction)) return NULL;
+    sprintf(format_memory, "XOR <rd=%s> <rs1=%s> <rs2=%s>",
+        register_to_name(decoded_instruction->rd),
+        register_to_name(decoded_instruction->rs1),
+        register_to_name(decoded_instruction->rs2)
+    );
+    return format_memory;
+}
+
+char* format_add_operation(R_INSTRUCTION* decoded_instruction) {
+    if (!is_add_instruction(decoded_instruction)) return NULL;
+    sprintf(format_memory, "ADD <rd=%s> <rs1=%s> <rs2=%s>",
+        register_to_name(decoded_instruction->rd),
+        register_to_name(decoded_instruction->rs1),
+        register_to_name(decoded_instruction->rs2)
+    );
+    return format_memory;
+}
+
+char* format_sub_operation(R_INSTRUCTION* decoded_instruction) {
+    if (!is_sub_instruction(decoded_instruction)) return NULL;
+    sprintf(format_memory, "SUB <rd=%s> <rs1=%s> <rs2=%s>",
+        register_to_name(decoded_instruction->rd),
+        register_to_name(decoded_instruction->rs1),
+        register_to_name(decoded_instruction->rs2)
+    );
+    return format_memory;
+}
+
+char* format_mul_operation(R_INSTRUCTION* decoded_instruction) {
+    if (!is_mul_instruction(decoded_instruction)) return NULL;
+    sprintf(format_memory, "MUL <rd=%s> <rs1=%s> <rs2=%s>",
+        register_to_name(decoded_instruction->rd),
+        register_to_name(decoded_instruction->rs1),
+        register_to_name(decoded_instruction->rs2)
+    );
+    return format_memory;
+}
+
+char* format_div_operation(R_INSTRUCTION* decoded_instruction) {
+    if (!is_div_instruction(decoded_instruction)) return NULL;
+    sprintf(format_memory, "DIV <rd=%s> <rs1=%s> <rs2=%s>",
+        register_to_name(decoded_instruction->rd),
+        register_to_name(decoded_instruction->rs1),
+        register_to_name(decoded_instruction->rs2)
+    );
+    return format_memory;
+}
 
 char* format_slt_operation(R_INSTRUCTION* decoded_instruction) {
     if (!is_slt_instruction(decoded_instruction)) return NULL;
     sprintf(format_memory, "SLT <rd=%s> <rs1=%s> <rs2=%s>",
+        register_to_name(decoded_instruction->rd),
+        register_to_name(decoded_instruction->rs1),
+        register_to_name(decoded_instruction->rs2)
+    );
+    return format_memory;
+}
+
+char* format_sle_operation(R_INSTRUCTION* decoded_instruction) {
+    if (!is_sle_instruction(decoded_instruction)) return NULL;
+    sprintf(format_memory, "SLE <rd=%s> <rs1=%s> <rs2=%s>",
+        register_to_name(decoded_instruction->rd),
+        register_to_name(decoded_instruction->rs1),
+        register_to_name(decoded_instruction->rs2)
+    );
+    return format_memory;
+}
+
+char* format_seq_operation(R_INSTRUCTION* decoded_instruction) {
+    if (!is_seq_instruction(decoded_instruction)) return NULL;
+    sprintf(format_memory, "SEQ <rd=%s> <rs1=%s> <rs2=%s>",
+        register_to_name(decoded_instruction->rd),
+        register_to_name(decoded_instruction->rs1),
+        register_to_name(decoded_instruction->rs2)
+    );
+    return format_memory;
+}
+
+char* format_sne_operation(R_INSTRUCTION* decoded_instruction) {
+    if (!is_sne_instruction(decoded_instruction)) return NULL;
+    sprintf(format_memory, "SNE <rd=%s> <rs1=%s> <rs2=%s>",
+        register_to_name(decoded_instruction->rd),
+        register_to_name(decoded_instruction->rs1),
+        register_to_name(decoded_instruction->rs2)
+    );
+    return format_memory;
+}
+
+char* format_min_operation(R_INSTRUCTION* decoded_instruction) {
+    if (!is_min_instruction(decoded_instruction)) return NULL;
+    sprintf(format_memory, "MIN <rd=%s> <rs1=%s> <rs2=%s>",
+        register_to_name(decoded_instruction->rd),
+        register_to_name(decoded_instruction->rs1),
+        register_to_name(decoded_instruction->rs2)
+    );
+    return format_memory;
+}
+
+char* format_max_operation(R_INSTRUCTION* decoded_instruction) {
+    if (!is_max_instruction(decoded_instruction)) return NULL;
+    sprintf(format_memory, "MAX <rd=%s> <rs1=%s> <rs2=%s>",
+        register_to_name(decoded_instruction->rd),
+        register_to_name(decoded_instruction->rs1),
+        register_to_name(decoded_instruction->rs2)
+    );
+    return format_memory;
+}
+
+char* format_rem_operation(R_INSTRUCTION* decoded_instruction) {
+    if (!is_rem_instruction(decoded_instruction)) return NULL;
+    sprintf(format_memory, "REM <rd=%s> <rs1=%s> <rs2=%s>",
+        register_to_name(decoded_instruction->rd),
+        register_to_name(decoded_instruction->rs1),
+        register_to_name(decoded_instruction->rs2)
+    );
+    return format_memory;
+}
+
+char* format_mod_operation(R_INSTRUCTION* decoded_instruction) {
+    if (!is_mod_instruction(decoded_instruction)) return NULL;
+    sprintf(format_memory, "MOD <rd=%s> <rs1=%s> <rs2=%s>",
+        register_to_name(decoded_instruction->rd),
+        register_to_name(decoded_instruction->rs1),
+        register_to_name(decoded_instruction->rs2)
+    );
+    return format_memory;
+}
+
+char* format_fadd_operation(R_INSTRUCTION* decoded_instruction) {
+    if (!is_fadd_instruction(decoded_instruction)) return NULL;
+    sprintf(format_memory, "FADD <rd=%s> <rs1=%s> <rs2=%s>",
+        register_to_name(decoded_instruction->rd),
+        register_to_name(decoded_instruction->rs1),
+        register_to_name(decoded_instruction->rs2)
+    );
+    return format_memory;
+}
+
+char* format_fsub_operation(R_INSTRUCTION* decoded_instruction) {
+    if (!is_fsub_instruction(decoded_instruction)) return NULL;
+    sprintf(format_memory, "FSUB <rd=%s> <rs1=%s> <rs2=%s>",
+        register_to_name(decoded_instruction->rd),
+        register_to_name(decoded_instruction->rs1),
+        register_to_name(decoded_instruction->rs2)
+    );
+    return format_memory;
+}
+
+char* format_fmul_operation(R_INSTRUCTION* decoded_instruction) {
+    if (!is_fmul_instruction(decoded_instruction)) return NULL;
+    sprintf(format_memory, "FMUL <rd=%s> <rs1=%s> <rs2=%s>",
+        register_to_name(decoded_instruction->rd),
+        register_to_name(decoded_instruction->rs1),
+        register_to_name(decoded_instruction->rs2)
+    );
+    return format_memory;
+}
+
+char* format_fdiv_operation(R_INSTRUCTION* decoded_instruction) {
+    if (!is_fdiv_instruction(decoded_instruction)) return NULL;
+    sprintf(format_memory, "FDIV <rd=%s> <rs1=%s> <rs2=%s>",
         register_to_name(decoded_instruction->rd),
         register_to_name(decoded_instruction->rs1),
         register_to_name(decoded_instruction->rs2)
