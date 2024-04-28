@@ -78,13 +78,13 @@ R_INSTRUCTION as_r_instruction(uint32_t instruction);
 #define OP1_SLL = 0b000;
 #define OP2_SLL = 0b01;
 #define TYPE_SLL = 0b00;
-bool is_sll_instruction(const R_INSTRUCTION* decoded_instruction);
+bool is_shl_instruction(const R_INSTRUCTION* decoded_instruction);
 
 #define OP0_SLR = 0b0000;
 #define OP1_SLR = 0b000;
 #define OP2_SLR = 0b10;
 #define TYPE_SLR = 0b00;
-bool is_slr_instruction(const R_INSTRUCTION* decoded_instruction);
+bool is_shr_instruction(const R_INSTRUCTION* decoded_instruction);
 
 #define OP0_AND = 0b0000;
 #define OP1_AND = 0b000;

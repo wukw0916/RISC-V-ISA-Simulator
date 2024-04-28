@@ -286,18 +286,30 @@ bool execute_simulation_step(simulator* s) {
     // U_INSTRUCTION u_instruction = as_u_instruction(encoded_instruction);
     // B_INSTRUCTION b_instruction = as_b_instruction(encoded_instruction);
     // J_INSTRUCTION j_instruction = as_j_instruction(encoded_instruction);
-    // if (is_add_instruction(&r_instruction)) {
-    //     WARN("Unimplemented operation: ADD");
-    //     return true;
-    // }
-    // if (is_sub_instruction(&r_instruction)) {
-    //     WARN("Unimplemented operation: SUB");
-    //     return true;
-    // }
-    // if (is_sll_instruction(&r_instruction)) {
-    //     WARN("Unimplemented operation: SLL");
-    //     return true;
-    // }
+    if (is_add_instruction(&r_instruction)) {
+        write_register(s, r_instruction.rd, 
+            read_register(s, r_instruction.rs1) + read_register(s, r_instruction.rs2)
+        );  
+        return true;
+    }
+    if (is_sub_instruction(&r_instruction)) {
+        write_register(s, r_instruction.rd, 
+            read_register(s, r_instruction.rs1) - read_register(s, r_instruction.rs2)
+        );  
+        return true;
+    }
+    if (is_shl_instruction(&r_instruction)) {
+        write_register(s, r_instruction.rd, 
+            read_register(s, r_instruction.rs1) << (read_register(s, r_instruction.rs2) %32)
+        );
+        return true;
+    }
+    if (is_shr_instruction(&r_instruction)) {
+        write_register(s, r_instruction.rd, 
+            read_register(s, r_instruction.rs1) >> (read_register(s, r_instruction.rs2) %32)
+        );
+        return true;
+    }
     if (is_slt_instruction(&r_instruction)) {
         if(read_register_signed(s, r_instruction.rs1) < read_register_signed(s, r_instruction.rs2)){
            write_register(s, r_instruction.rd, 1);
