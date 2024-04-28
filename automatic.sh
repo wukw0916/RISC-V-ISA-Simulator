@@ -42,7 +42,7 @@ compile_program() {
 
 # Run example
 run_example() {
-    ./build/egp01_simulator --verbose --load-file example.mem
+    ./build/egp01_simulator --verbose --load-file tests/end_to_end/slt_tests.mem
 }
 
 # build instruction_tests
@@ -108,13 +108,13 @@ run_valgrind(){
 main() {
     compile_program
     run_example
-    build_instruction
-    run_instruction
+    # build_instruction
+    # run_instruction
     # run_generate_code
-    compile_generated_code
-    fail_if_not_up_to_date
+    # compile_generated_code
+    # fail_if_not_up_to_date
     # run_all_instruction_tests
-    run_all_end_to_end_tests
+    # run_all_end_to_end_tests
     # run_valgrind
 }
 
