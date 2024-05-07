@@ -312,11 +312,11 @@ bool execute_simulation_step(simulator* s) {
     INFO("Instruction [%08X] %08X: %s", pc, encoded_instruction, format_instruction(encoded_instruction));
 
     R_INSTRUCTION r_instruction = as_r_instruction(encoded_instruction);
-    I_INSTRUCTION i_instruction = as_i_instruction(encoded_instruction);
-    S_INSTRUCTION s_instruction = as_s_instruction(encoded_instruction);
-    U_INSTRUCTION u_instruction = as_u_instruction(encoded_instruction);
-    B_INSTRUCTION b_instruction = as_b_instruction(encoded_instruction);
-    J_INSTRUCTION j_instruction = as_j_instruction(encoded_instruction);
+    // I_INSTRUCTION i_instruction = as_i_instruction(encoded_instruction);
+    // S_INSTRUCTION s_instruction = as_s_instruction(encoded_instruction);
+    // U_INSTRUCTION u_instruction = as_u_instruction(encoded_instruction);
+    // B_INSTRUCTION b_instruction = as_b_instruction(encoded_instruction);
+    // J_INSTRUCTION j_instruction = as_j_instruction(encoded_instruction);
     if (is_add_instruction(&r_instruction)) {
         write_register(s, r_instruction.rd, 
             read_register(s, r_instruction.rs1) + read_register(s, r_instruction.rs2)
@@ -329,244 +329,9 @@ bool execute_simulation_step(simulator* s) {
         );  
         return true;
     }
-    if (is_sll_instruction(&r_instruction)) {
-        write_register(s, r_instruction.rd, 
-            read_register(s, r_instruction.rs1) << (read_register(s, r_instruction.rs2) %32)
-        );
-        return true;
-    }
-    if (is_slt_instruction(&r_instruction)) {
-        if(read_register_signed(s, r_instruction.rs1) < read_register_signed(s, r_instruction.rs2)){
-            write_register(s, r_instruction.rd, 1);
-        }
-        else {
-            write_register(s, r_instruction.rd, 0);
-        }
-        return true;
-    }
-    if (is_sltu_instruction(&r_instruction)) {
-        if(read_register(s, r_instruction.rs1) < read_register(s, r_instruction.rs2)){
-            write_register(s, r_instruction.rd, 1);
-        }
-        else {
-            write_register(s, r_instruction.rd, 0);
-        }
-        return true;
-    }
-    if (is_xor_instruction(&r_instruction)) {
-        write_register(s, r_instruction.rd, 
-            read_register(s, r_instruction.rs1)^ read_register(s, r_instruction.rs2)
-        );
-        return true;
-    }
-    if (is_srl_instruction(&r_instruction)) {
-        write_register(s, r_instruction.rd, 
-            read_register(s, r_instruction.rs1) >> (read_register(s, r_instruction.rs2) %32)
-        );
-        return true;
-    }
-    if (is_sra_instruction(&r_instruction)) {
-        write_register_signed(s, r_instruction.rd, 
-            read_register_signed(s, r_instruction.rs1) >> (read_register(s, r_instruction.rs2) %32)
-        );
-        return true;
-    }
-    if (is_or_instruction(&r_instruction)) {
-        write_register(s, r_instruction.rd, 
-            read_register(s, r_instruction.rs1) | read_register(s, r_instruction.rs2)
-        );
-        return true;
-    }
-    if (is_and_instruction(&r_instruction)) {
-        write_register(s, r_instruction.rd, 
-            read_register(s, r_instruction.rs1) & read_register(s, r_instruction.rs2)
-        );
-        return true;
-    }
-    if (is_addi_instruction(&i_instruction)) {
-        write_register(s, i_instruction.rd,
-            (read_register(s, i_instruction.rs1) + i_instruction.imm_s)
-        );
-        return true;
-    }
-    if (is_slti_instruction(&i_instruction)) {
-        if(read_register_signed(s, i_instruction.rs1) < i_instruction.imm_s) {
-            write_register(s, i_instruction.rd, 1);
-        }        
-        else {
-            write_register(s, i_instruction.rd, 0);
-        }
-        return true;
-    }
-    if (is_sltiu_instruction(&i_instruction)) {
-        if(read_register(s, i_instruction.rs1) < (uint32_t) ((int32_t) i_instruction.imm_s)) { 
-            write_register(s, i_instruction.rd, 1);                                            
-        }        
-        else {
-            write_register(s, i_instruction.rd, 0);
-        }
-        return true;
-    }
-    if (is_xori_instruction(&i_instruction)) {
-        write_register(s, i_instruction.rd, 
-            read_register(s, i_instruction.rs1)^ ((int32_t)i_instruction.imm_s)
-        );
-        return true;
-    }
-    if (is_ori_instruction(&i_instruction)) {
-        write_register(s, i_instruction.rd, 
-            read_register(s, i_instruction.rs1)|((int32_t)i_instruction.imm_s)
-        );
-        return true;
-    }
-    if (is_andi_instruction(&i_instruction)) {
-        uint32_t imm_value = (read_register_signed(s, i_instruction.rs1)&((int32_t)i_instruction.imm_s));
-        write_register_signed(s, i_instruction.rd, imm_value);
-        return true;
-    }
-    if (is_slli_instruction(&i_instruction)) {
-        write_register(s, i_instruction.rd, (read_register(s,i_instruction.rs1)) << (0x01f & i_instruction.imm_u));
-        return true;
-    }
-    if (is_srli_instruction(&i_instruction)) {
-        write_register(s, i_instruction.rd,
-            (read_register(s,i_instruction.rs1)) >> (0x01f & i_instruction.imm_u)
-        );
-        return true;
-    }
-    if (is_srai_instruction(&i_instruction)) {
-        write_register(s, i_instruction.rd,
-            (read_register_signed(s,i_instruction.rs1)) >> (0x01f & i_instruction.imm_u)
-        );
-        return true;
-    }
-    if (is_beq_instruction(&b_instruction)) {
-        if(read_register(s, b_instruction.rs1) == read_register(s, b_instruction.rs2)){
-            s->pc = pc + (b_instruction.imm_s);
-        }
-        return true;
-    }
-    if (is_bne_instruction(&b_instruction)) {
-        if(read_register(s, b_instruction.rs1) != read_register(s, b_instruction.rs2)){
-            s->pc = pc + (b_instruction.imm_s);
-        }
-        return true;
-    }
-    if (is_blt_instruction(&b_instruction)) {
-        if(read_register_signed(s, b_instruction.rs1) < read_register_signed(s, b_instruction.rs2)){
-            s->pc = pc + (b_instruction.imm_s);
-        }
-        return true;
-    }
-    if (is_bge_instruction(&b_instruction)) {
-        if(read_register_signed(s, b_instruction.rs1) >= read_register_signed(s, b_instruction.rs2)){
-            s->pc = pc + (b_instruction.imm_s);
-        }
-        return true;
-    }
-    if (is_bltu_instruction(&b_instruction)) {
-        if(read_register(s, b_instruction.rs1) < read_register(s, b_instruction.rs2)){
-            s->pc = pc + (b_instruction.imm_s);
-        }
-        return true;
-    }
-    if (is_bgeu_instruction(&b_instruction)) {
-        if(read_register(s, b_instruction.rs1) >= read_register(s, b_instruction.rs2)){
-            s->pc = pc + (b_instruction.imm_s);
-        }
-        return true;
-    }
-    if (is_lui_instruction(&u_instruction)) {
-        write_register(s, u_instruction.rd, 
-            u_instruction.imm_u << 12
-        );
-        return true;
-    }
-    if (is_auipc_instruction(&u_instruction)) {
-        write_register(s, u_instruction.rd, pc + (u_instruction.imm_u<<12));
-        return true;
-    }
-    if (is_jal_instruction(&j_instruction)) {
-        write_register(s, j_instruction.rd, pc + 4);
-        s->pc = pc + j_instruction.imm_s;
-        return true;
-    }
-    if (is_jalr_instruction(&i_instruction)) {
-        write_register(s, i_instruction.rd, pc + 4);
-        s->pc = (read_register_signed(s,i_instruction.rs1) + i_instruction.imm_s) & ~1;
-        return true;
-    }
-    if (is_lb_instruction(&i_instruction)) {
-        write_register(s, i_instruction.rd,
-            read_sbyte(s, read_register(s, i_instruction.rs1) + i_instruction.imm_s)
-        );
-        return true;
-    }
-    if (is_lh_instruction(&i_instruction)) {
-        write_register(s, i_instruction.rd,
-            read_shword(s, read_register(s, i_instruction.rs1) + i_instruction.imm_s)
-        );
-        return true;
-    }
-    if (is_lw_instruction(&i_instruction)) {
-        write_register(s, i_instruction.rd,
-            read_sword(s,(read_register(s, i_instruction.rs1) + i_instruction.imm_s))
-        );
-        return true;
-    }
-    if (is_lbu_instruction(&i_instruction)) {
-        write_register(s, i_instruction.rd,
-            read_byte(s, read_register(s, i_instruction.rs1) + i_instruction.imm_s)
-        );
-        return true;
-    }
-    if (is_lhu_instruction(&i_instruction)) {
-        write_register(s, i_instruction.rd,
-            read_hword(s, read_register(s, i_instruction.rs1) + i_instruction.imm_s)
-        );
-        return true;
-    }
-    if (is_sb_instruction(&s_instruction)) {
-        write_byte(s,
-            read_register(s, s_instruction.rs1) + s_instruction.imm_s,
-            read_register(s, s_instruction.rs2)
-        );
-        return true;
-    }
-    if (is_sh_instruction(&s_instruction)) {
-        write_hword(s,
-            read_register(s, s_instruction.rs1) + s_instruction.imm_s,
-            read_register(s, s_instruction.rs2)
-        );
-        return true;
-    }
-    if (is_sw_instruction(&s_instruction)) {
-        write_word(s,
-            read_register(s, s_instruction.rs1) + s_instruction.imm_s,
-            read_register(s, s_instruction.rs2)
-        );
-        return true;
-    }
     if (is_mul_instruction(&r_instruction)) {
         write_register_signed(s, r_instruction.rd,
             ((int64_t)read_register_signed(s, r_instruction.rs1) * (int64_t)read_register_signed(s, r_instruction.rs2))
-        ); 
-        return true;
-    }
-    if (is_mulh_instruction(&r_instruction)) {
-        int64_t value = ((int64_t)read_register(s, r_instruction.rs1) * (int64_t)read_register(s, r_instruction.rs2));
-        write_register_signed(s, r_instruction.rd, value>>32);
-        return true;
-    }
-    if (is_mulhsu_instruction(&r_instruction)) {
-        write_register_signed(s, r_instruction.rd,
-            (((int64_t)read_register_signed(s, r_instruction.rs1) * (uint64_t)read_register(s, r_instruction.rs2))>> 32)
-        ); 
-        return true;
-    }
-    if (is_mulhu_instruction(&r_instruction)) {
-        write_register(s, r_instruction.rd,
-            (((uint64_t)read_register(s, r_instruction.rs1) * (uint64_t)read_register(s, r_instruction.rs2)) >> 32)
         ); 
         return true;
     }
@@ -581,78 +346,313 @@ bool execute_simulation_step(simulator* s) {
             );
         return true;
     }
-    if (is_divu_instruction(&r_instruction)) {
-        write_register(s, r_instruction.rd,
-            (read_register(s, r_instruction.rs1) / read_register(s, r_instruction.rs2)) 
-        );
-        return true;
-    }
-    if (is_rem_instruction(&r_instruction)) {
-        write_register(s, r_instruction.rd,
-            (read_register_signed(s, r_instruction.rs1) % read_register_signed(s, r_instruction.rs2))
-        );
-        return true;
-    }
-    if (is_remu_instruction(&r_instruction)) {
-        write_register(s, r_instruction.rd,
-            (read_register(s, r_instruction.rs1) % read_register(s, r_instruction.rs2))
-        );
-        return true;
-    }
-    if (is_ecall_instruction(&i_instruction)) {
-        if (i_instruction.imm_u == 1)
-            WARN("Unimplemented operation: EBREAK");
-        else if (i_instruction.imm_u != 0)
-            WARN("Unexpected imm value for ECALL");
-        else {
-            uint32_t syscall = read_register(s, REG_A7);
-            FILE* fds[] = {
-                stdin,
-                stdout,
-                stderr,
-            };
-            switch (syscall) {
-            case 63:
-                {
-                    WARN("ECALL: READ");
-                    uint32_t fd = read_register(s, REG_A0);
-                    uint32_t addr = read_register(s, REG_A1);
-                    uint32_t length = read_register(s, REG_A2);
-                    if (addr > s->mem_bytes)
-                        return true;
-                    if (addr + length > s->mem_bytes)
-                        length = s->mem_bytes - addr;
-                    if (fd <= length(fds))
-                        write_register(s, REG_A0,
-                            fread(&((uint8_t*) s->memory)[addr], sizeof(uint8_t), length, fds[fd])
-                        );
-                    return true;
-                }
-            case 64:
-                INFO("ECALL: write");
-                uint32_t fd = read_register(s, REG_A0);
-                uint32_t addr = read_register(s, REG_A1);
-                uint32_t length = read_register(s, REG_A2);
-                if (addr > s->mem_bytes)
-                    return true;
-                if (addr + length > s->mem_bytes)
-                    length = s->mem_bytes - addr;
-                if (fd <= length(fds))
-                    write_register(s, REG_A0,
-                        fprintf(fds[fd], "%-*s", length, &((uint8_t*) s->memory)[addr])
-                    );
-                return true;
-            case 94:
-                INFO("ECALL: exit");
-                s->return_code = read_register(s, REG_A0);
-                return false;
-            default:
-                WARN("Unknown syscall: %d", syscall);
-                break;
-            }
-        }
-        return true;
-    }
+    // if (is_sll_instruction(&r_instruction)) {
+    //     write_register(s, r_instruction.rd, 
+    //         read_register(s, r_instruction.rs1) << (read_register(s, r_instruction.rs2) %32)
+    //     );
+    //     return true;
+    // }
+    // if (is_slt_instruction(&r_instruction)) {
+    //     if(read_register_signed(s, r_instruction.rs1) < read_register_signed(s, r_instruction.rs2)){
+    //         write_register(s, r_instruction.rd, 1);
+    //     }
+    //     else {
+    //         write_register(s, r_instruction.rd, 0);
+    //     }
+    //     return true;
+    // }
+    // if (is_sltu_instruction(&r_instruction)) {
+    //     if(read_register(s, r_instruction.rs1) < read_register(s, r_instruction.rs2)){
+    //         write_register(s, r_instruction.rd, 1);
+    //     }
+    //     else {
+    //         write_register(s, r_instruction.rd, 0);
+    //     }
+    //     return true;
+    // }
+    // if (is_xor_instruction(&r_instruction)) {
+    //     write_register(s, r_instruction.rd, 
+    //         read_register(s, r_instruction.rs1)^ read_register(s, r_instruction.rs2)
+    //     );
+    //     return true;
+    // }
+    // if (is_srl_instruction(&r_instruction)) {
+    //     write_register(s, r_instruction.rd, 
+    //         read_register(s, r_instruction.rs1) >> (read_register(s, r_instruction.rs2) %32)
+    //     );
+    //     return true;
+    // }
+    // if (is_sra_instruction(&r_instruction)) {
+    //     write_register_signed(s, r_instruction.rd, 
+    //         read_register_signed(s, r_instruction.rs1) >> (read_register(s, r_instruction.rs2) %32)
+    //     );
+    //     return true;
+    // }
+    // if (is_or_instruction(&r_instruction)) {
+    //     write_register(s, r_instruction.rd, 
+    //         read_register(s, r_instruction.rs1) | read_register(s, r_instruction.rs2)
+    //     );
+    //     return true;
+    // }
+    // if (is_and_instruction(&r_instruction)) {
+    //     write_register(s, r_instruction.rd, 
+    //         read_register(s, r_instruction.rs1) & read_register(s, r_instruction.rs2)
+    //     );
+    //     return true;
+    // }
+    // if (is_addi_instruction(&i_instruction)) {
+    //     write_register(s, i_instruction.rd,
+    //         (read_register(s, i_instruction.rs1) + i_instruction.imm_s)
+    //     );
+    //     return true;
+    // }
+    // if (is_slti_instruction(&i_instruction)) {
+    //     if(read_register_signed(s, i_instruction.rs1) < i_instruction.imm_s) {
+    //         write_register(s, i_instruction.rd, 1);
+    //     }        
+    //     else {
+    //         write_register(s, i_instruction.rd, 0);
+    //     }
+    //     return true;
+    // }
+    // if (is_sltiu_instruction(&i_instruction)) {
+    //     if(read_register(s, i_instruction.rs1) < (uint32_t) ((int32_t) i_instruction.imm_s)) { 
+    //         write_register(s, i_instruction.rd, 1);                                            
+    //     }        
+    //     else {
+    //         write_register(s, i_instruction.rd, 0);
+    //     }
+    //     return true;
+    // }
+    // if (is_xori_instruction(&i_instruction)) {
+    //     write_register(s, i_instruction.rd, 
+    //         read_register(s, i_instruction.rs1)^ ((int32_t)i_instruction.imm_s)
+    //     );
+    //     return true;
+    // }
+    // if (is_ori_instruction(&i_instruction)) {
+    //     write_register(s, i_instruction.rd, 
+    //         read_register(s, i_instruction.rs1)|((int32_t)i_instruction.imm_s)
+    //     );
+    //     return true;
+    // }
+    // if (is_andi_instruction(&i_instruction)) {
+    //     uint32_t imm_value = (read_register_signed(s, i_instruction.rs1)&((int32_t)i_instruction.imm_s));
+    //     write_register_signed(s, i_instruction.rd, imm_value);
+    //     return true;
+    // }
+    // if (is_slli_instruction(&i_instruction)) {
+    //     write_register(s, i_instruction.rd, (read_register(s,i_instruction.rs1)) << (0x01f & i_instruction.imm_u));
+    //     return true;
+    // }
+    // if (is_srli_instruction(&i_instruction)) {
+    //     write_register(s, i_instruction.rd,
+    //         (read_register(s,i_instruction.rs1)) >> (0x01f & i_instruction.imm_u)
+    //     );
+    //     return true;
+    // }
+    // if (is_srai_instruction(&i_instruction)) {
+    //     write_register(s, i_instruction.rd,
+    //         (read_register_signed(s,i_instruction.rs1)) >> (0x01f & i_instruction.imm_u)
+    //     );
+    //     return true;
+    // }
+    // if (is_beq_instruction(&b_instruction)) {
+    //     if(read_register(s, b_instruction.rs1) == read_register(s, b_instruction.rs2)){
+    //         s->pc = pc + (b_instruction.imm_s);
+    //     }
+    //     return true;
+    // }
+    // if (is_bne_instruction(&b_instruction)) {
+    //     if(read_register(s, b_instruction.rs1) != read_register(s, b_instruction.rs2)){
+    //         s->pc = pc + (b_instruction.imm_s);
+    //     }
+    //     return true;
+    // }
+    // if (is_blt_instruction(&b_instruction)) {
+    //     if(read_register_signed(s, b_instruction.rs1) < read_register_signed(s, b_instruction.rs2)){
+    //         s->pc = pc + (b_instruction.imm_s);
+    //     }
+    //     return true;
+    // }
+    // if (is_bge_instruction(&b_instruction)) {
+    //     if(read_register_signed(s, b_instruction.rs1) >= read_register_signed(s, b_instruction.rs2)){
+    //         s->pc = pc + (b_instruction.imm_s);
+    //     }
+    //     return true;
+    // }
+    // if (is_bltu_instruction(&b_instruction)) {
+    //     if(read_register(s, b_instruction.rs1) < read_register(s, b_instruction.rs2)){
+    //         s->pc = pc + (b_instruction.imm_s);
+    //     }
+    //     return true;
+    // }
+    // if (is_bgeu_instruction(&b_instruction)) {
+    //     if(read_register(s, b_instruction.rs1) >= read_register(s, b_instruction.rs2)){
+    //         s->pc = pc + (b_instruction.imm_s);
+    //     }
+    //     return true;
+    // }
+    // if (is_lui_instruction(&u_instruction)) {
+    //     write_register(s, u_instruction.rd, 
+    //         u_instruction.imm_u << 12
+    //     );
+    //     return true;
+    // }
+    // if (is_auipc_instruction(&u_instruction)) {
+    //     write_register(s, u_instruction.rd, pc + (u_instruction.imm_u<<12));
+    //     return true;
+    // }
+    // if (is_jal_instruction(&j_instruction)) {
+    //     write_register(s, j_instruction.rd, pc + 4);
+    //     s->pc = pc + j_instruction.imm_s;
+    //     return true;
+    // }
+    // if (is_jalr_instruction(&i_instruction)) {
+    //     write_register(s, i_instruction.rd, pc + 4);
+    //     s->pc = (read_register_signed(s,i_instruction.rs1) + i_instruction.imm_s) & ~1;
+    //     return true;
+    // }
+    // if (is_lb_instruction(&i_instruction)) {
+    //     write_register(s, i_instruction.rd,
+    //         read_sbyte(s, read_register(s, i_instruction.rs1) + i_instruction.imm_s)
+    //     );
+    //     return true;
+    // }
+    // if (is_lh_instruction(&i_instruction)) {
+    //     write_register(s, i_instruction.rd,
+    //         read_shword(s, read_register(s, i_instruction.rs1) + i_instruction.imm_s)
+    //     );
+    //     return true;
+    // }
+    // if (is_lw_instruction(&i_instruction)) {
+    //     write_register(s, i_instruction.rd,
+    //         read_sword(s,(read_register(s, i_instruction.rs1) + i_instruction.imm_s))
+    //     );
+    //     return true;
+    // }
+    // if (is_lbu_instruction(&i_instruction)) {
+    //     write_register(s, i_instruction.rd,
+    //         read_byte(s, read_register(s, i_instruction.rs1) + i_instruction.imm_s)
+    //     );
+    //     return true;
+    // }
+    // if (is_lhu_instruction(&i_instruction)) {
+    //     write_register(s, i_instruction.rd,
+    //         read_hword(s, read_register(s, i_instruction.rs1) + i_instruction.imm_s)
+    //     );
+    //     return true;
+    // }
+    // if (is_sb_instruction(&s_instruction)) {
+    //     write_byte(s,
+    //         read_register(s, s_instruction.rs1) + s_instruction.imm_s,
+    //         read_register(s, s_instruction.rs2)
+    //     );
+    //     return true;
+    // }
+    // if (is_sh_instruction(&s_instruction)) {
+    //     write_hword(s,
+    //         read_register(s, s_instruction.rs1) + s_instruction.imm_s,
+    //         read_register(s, s_instruction.rs2)
+    //     );
+    //     return true;
+    // }
+    // if (is_sw_instruction(&s_instruction)) {
+    //     write_word(s,
+    //         read_register(s, s_instruction.rs1) + s_instruction.imm_s,
+    //         read_register(s, s_instruction.rs2)
+    //     );
+    //     return true;
+    // }
+    // if (is_mulh_instruction(&r_instruction)) {
+    //     int64_t value = ((int64_t)read_register(s, r_instruction.rs1) * (int64_t)read_register(s, r_instruction.rs2));
+    //     write_register_signed(s, r_instruction.rd, value>>32);
+    //     return true;
+    // }
+    // if (is_mulhsu_instruction(&r_instruction)) {
+    //     write_register_signed(s, r_instruction.rd,
+    //         (((int64_t)read_register_signed(s, r_instruction.rs1) * (uint64_t)read_register(s, r_instruction.rs2))>> 32)
+    //     ); 
+    //     return true;
+    // }
+    // if (is_mulhu_instruction(&r_instruction)) {
+    //     write_register(s, r_instruction.rd,
+    //         (((uint64_t)read_register(s, r_instruction.rs1) * (uint64_t)read_register(s, r_instruction.rs2)) >> 32)
+    //     ); 
+    //     return true;
+    // }
+    // if (is_divu_instruction(&r_instruction)) {
+    //     write_register(s, r_instruction.rd,
+    //         (read_register(s, r_instruction.rs1) / read_register(s, r_instruction.rs2)) 
+    //     );
+    //     return true;
+    // }
+    // if (is_rem_instruction(&r_instruction)) {
+    //     write_register(s, r_instruction.rd,
+    //         (read_register_signed(s, r_instruction.rs1) % read_register_signed(s, r_instruction.rs2))
+    //     );
+    //     return true;
+    // }
+    // if (is_remu_instruction(&r_instruction)) {
+    //     write_register(s, r_instruction.rd,
+    //         (read_register(s, r_instruction.rs1) % read_register(s, r_instruction.rs2))
+    //     );
+    //     return true;
+    // }
+    // if (is_ecall_instruction(&i_instruction)) {
+    //     if (i_instruction.imm_u == 1)
+    //         WARN("Unimplemented operation: EBREAK");
+    //     else if (i_instruction.imm_u != 0)
+    //         WARN("Unexpected imm value for ECALL");
+    //     else {
+    //         uint32_t syscall = read_register(s, REG_A7);
+    //         FILE* fds[] = {
+    //             stdin,
+    //             stdout,
+    //             stderr,
+    //         };
+    //         switch (syscall) {
+    //         case 63:
+    //             {
+    //                 WARN("ECALL: READ");
+    //                 uint32_t fd = read_register(s, REG_A0);
+    //                 uint32_t addr = read_register(s, REG_A1);
+    //                 uint32_t length = read_register(s, REG_A2);
+    //                 if (addr > s->mem_bytes)
+    //                     return true;
+    //                 if (addr + length > s->mem_bytes)
+    //                     length = s->mem_bytes - addr;
+    //                 if (fd <= length(fds))
+    //                     write_register(s, REG_A0,
+    //                         fread(&((uint8_t*) s->memory)[addr], sizeof(uint8_t), length, fds[fd])
+    //                     );
+    //                 return true;
+    //             }
+    //         case 64:
+    //             INFO("ECALL: write");
+    //             uint32_t fd = read_register(s, REG_A0);
+    //             uint32_t addr = read_register(s, REG_A1);
+    //             uint32_t length = read_register(s, REG_A2);
+    //             if (addr > s->mem_bytes)
+    //                 return true;
+    //             if (addr + length > s->mem_bytes)
+    //                 length = s->mem_bytes - addr;
+    //             if (fd <= length(fds))
+    //                 write_register(s, REG_A0,
+    //                     fprintf(fds[fd], "%-*s", length, &((uint8_t*) s->memory)[addr])
+    //                 );
+    //             return true;
+    //         case 94:
+    //             INFO("ECALL: exit");
+    //             s->return_code = read_register(s, REG_A0);
+    //             return false;
+    //         default:
+    //             WARN("Unknown syscall: %d", syscall);
+    //             break;
+    //         }
+    //     }
+    //     return true;
+    // }
 
     WARN("Unhandled operation: %08X", encoded_instruction);
     return true;
