@@ -133,6 +133,37 @@ bool is_div_instruction(const R_INSTRUCTION* decoded_instruction);
 #define TYPE_SHL 0b00;
 bool is_shl_instruction(const R_INSTRUCTION* decoded_instruction);
 
+#define OP0_SHR 0b0000;
+#define OP1_SHR 0b000;
+#define OP2_SHR 0b10;
+#define TYPE_SHR 0b00;
+bool is_shr_instruction(const R_INSTRUCTION* decoded_instruction);
+
+#define OP0_AND 0b0000;
+#define OP1_AND 0b000;
+#define OP2_AND 0b11;
+#define TYPE_AND 0b00;
+bool is_and_instruction(const R_INSTRUCTION* decoded_instruction);
+
+#define OP0_OR 0b0000;
+#define OP1_OR 0b000;
+#define OP2_OR 0b11;
+#define TYPE_OR 0b01;
+bool is_or_instruction(const R_INSTRUCTION* decoded_instruction);
+
+#define OP0_NOT 0b0000;
+#define OP1_NOT 0b000;
+#define OP2_NOT 0b11;
+#define TYPE_NOT 0b10;
+bool is_not_instruction(const R_INSTRUCTION* decoded_instruction);
+
+#define OP0_XOR 0b0000;
+#define OP1_XOR 0b000;
+#define OP2_XOR 0b11;
+#define TYPE_XOR 0b11;
+bool is_xor_instruction(const R_INSTRUCTION* decoded_instruction);
+
+
 // #define OPCODE_SLT 0b0110011;
 // #define FUNC3_SLT 0b010;
 // #define FUNC7_SLT 0b0000000;
@@ -328,19 +359,23 @@ char* format_div_operation(R_INSTRUCTION* decoded_instruction);
 
 char* format_shl_operation(R_INSTRUCTION* decoded_instruction);
 
+char* format_shr_operation(R_INSTRUCTION* decoded_instruction);
+
+char* format_and_operation(R_INSTRUCTION* decoded_instruction);
+
+char* format_or_operation(R_INSTRUCTION* decoded_instruction);
+
+char* format_not_operation(R_INSTRUCTION* decoded_instruction);
+
+char* format_xor_operation(R_INSTRUCTION* decoded_instruction);
+
 // char* format_slt_operation(R_INSTRUCTION* decoded_instruction);
 
 // char* format_sltu_operation(R_INSTRUCTION* decoded_instruction);
 
-// char* format_xor_operation(R_INSTRUCTION* decoded_instruction);
-
 // char* format_srl_operation(R_INSTRUCTION* decoded_instruction);
 
 // char* format_sra_operation(R_INSTRUCTION* decoded_instruction);
-
-// char* format_or_operation(R_INSTRUCTION* decoded_instruction);
-
-// char* format_and_operation(R_INSTRUCTION* decoded_instruction);
 
 // char* format_addi_operation(I_INSTRUCTION* decoded_instruction);
 
