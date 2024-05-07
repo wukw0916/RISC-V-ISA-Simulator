@@ -103,6 +103,12 @@ R_INSTRUCTION as_r_instruction(uint32_t instruction);
 // } J_INSTRUCTION;
 // J_INSTRUCTION as_j_instruction(uint32_t instruction);
 
+#define OP0_ABS 0b0000;
+#define OP1_ABS 0b000;
+#define OP2_ABS 0b00;
+#define TYPE_ABS 0b00;
+bool is_abs_instruction(const R_INSTRUCTION* decoded_instruction);
+
 #define OP0_ADD 0b0000;
 #define OP1_ADD 0b010;
 #define OP2_ADD 0b00;
@@ -348,6 +354,8 @@ bool is_xor_instruction(const R_INSTRUCTION* decoded_instruction);
 int count_all_instruction_matches(uint32_t encoded_instruction);
 
 char* format_instruction(uint32_t encoded_instruction);
+
+char* format_abs_operation(R_INSTRUCTION* decoded_instruction);
 
 char* format_add_operation(R_INSTRUCTION* decoded_instruction);
 

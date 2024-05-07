@@ -317,6 +317,14 @@ bool execute_simulation_step(simulator* s) {
     // U_INSTRUCTION u_instruction = as_u_instruction(encoded_instruction);
     // B_INSTRUCTION b_instruction = as_b_instruction(encoded_instruction);
     // J_INSTRUCTION j_instruction = as_j_instruction(encoded_instruction);
+    if (is_abs_instruction(&r_instruction)) {
+        int value = read_register(s, r_instruction.rs1);
+        if (value < 0) {
+            value = -value;
+        }
+        write_register(s, r_instruction.rd, value);
+        return true;
+    }
     if (is_add_instruction(&r_instruction)) {
         write_register(s, r_instruction.rd, 
             read_register(s, r_instruction.rs1) + read_register(s, r_instruction.rs2)

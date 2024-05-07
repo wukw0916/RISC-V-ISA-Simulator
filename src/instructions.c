@@ -458,6 +458,15 @@ R_INSTRUCTION as_r_instruction(uint32_t instruction) {
 //     return d;
 // }
 
+bool is_abs_instruction(const R_INSTRUCTION* decoded_instruction) {
+    if (decoded_instruction == NULL) FAIL("Received NULL pointer on is_abs_instruction");
+    if (decoded_instruction->op0 != 0b0000) return false;
+    if (decoded_instruction->op1 != 0b000) return false;
+    if (decoded_instruction->op2 != 0b00) return false;
+    if (decoded_instruction->type != 0b00) return false;
+    return true;
+}
+
 bool is_add_instruction(const R_INSTRUCTION* decoded_instruction) {
     if (decoded_instruction == NULL) FAIL("Received NULL pointer on is_add_instruction");
     if (decoded_instruction->op0 != 0b0000) return false;
@@ -841,6 +850,7 @@ int count_all_instruction_matches(uint32_t encoded_instruction) {
     // U_INSTRUCTION u_instruction = as_u_instruction(encoded_instruction);
     // B_INSTRUCTION b_instruction = as_b_instruction(encoded_instruction);
     // J_INSTRUCTION j_instruction = as_j_instruction(encoded_instruction);
+    count += is_abs_instruction(&r_instruction);
     count += is_add_instruction(&r_instruction);
     count += is_sub_instruction(&r_instruction);
     count += is_mul_instruction(&r_instruction);
@@ -900,6 +910,7 @@ char* format_instruction(uint32_t encoded_instruction) {
     // U_INSTRUCTION u_instruction = as_u_instruction(encoded_instruction);
     // B_INSTRUCTION b_instruction = as_b_instruction(encoded_instruction);
     // J_INSTRUCTION j_instruction = as_j_instruction(encoded_instruction);
+    if (is_abs_instruction(&r_instruction)) return format_abs_operation(&r_instruction);
     if (is_add_instruction(&r_instruction)) return format_add_operation(&r_instruction);
     if (is_sub_instruction(&r_instruction)) return format_sub_operation(&r_instruction);
     if (is_mul_instruction(&r_instruction)) return format_mul_operation(&r_instruction);
@@ -949,6 +960,16 @@ char* format_instruction(uint32_t encoded_instruction) {
     // if (is_rem_instruction(&r_instruction)) return format_rem_operation(&r_instruction);
     // if (is_remu_instruction(&r_instruction)) return format_remu_operation(&r_instruction);
     return NULL;
+}
+
+char* format_abs_operation(R_INSTRUCTION* decoded_instruction) {
+    if (!is_abs_instruction(decoded_instruction)) return NULL;
+    sprintf(format_memory, "ABS <rd=%s> <rs1=%s> ",
+        register_to_name(decoded_instruction->rd),
+        register_to_name(decoded_instruction->rs1)
+        // register_to_name(decoded_instruction->rs2)
+    );
+    return format_memory;
 }
 
 char* format_add_operation(R_INSTRUCTION* decoded_instruction) {
