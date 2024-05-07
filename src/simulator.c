@@ -346,12 +346,12 @@ bool execute_simulation_step(simulator* s) {
             );
         return true;
     }
-    // if (is_sll_instruction(&r_instruction)) {
-    //     write_register(s, r_instruction.rd, 
-    //         read_register(s, r_instruction.rs1) << (read_register(s, r_instruction.rs2) %32)
-    //     );
-    //     return true;
-    // }
+    if (is_shl_instruction(&r_instruction)) {
+        write_register(s, r_instruction.rd, 
+            read_register(s, r_instruction.rs1) << (read_register(s, r_instruction.rs2) %32)
+        );
+        return true;
+    }
     // if (is_slt_instruction(&r_instruction)) {
     //     if(read_register_signed(s, r_instruction.rs1) < read_register_signed(s, r_instruction.rs2)){
     //         write_register(s, r_instruction.rd, 1);

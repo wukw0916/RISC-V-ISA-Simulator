@@ -127,10 +127,11 @@ bool is_mul_instruction(const R_INSTRUCTION* decoded_instruction);
 #define TYPE_DIV 0b00;
 bool is_div_instruction(const R_INSTRUCTION* decoded_instruction);
 
-// #define OPCODE_SLL 0b0110011;
-// #define FUNC3_SLL 0b001;
-// #define FUNC7_SLL 0b0000000;
-// bool is_sll_instruction(const R_INSTRUCTION* decoded_instruction);
+#define OP0_SHL 0b0000;
+#define OP1_SHL 0b000;
+#define OP2_SHL 0b01;
+#define TYPE_SHL 0b00;
+bool is_shl_instruction(const R_INSTRUCTION* decoded_instruction);
 
 // #define OPCODE_SLT 0b0110011;
 // #define FUNC3_SLT 0b010;
@@ -325,7 +326,7 @@ char* format_mul_operation(R_INSTRUCTION* decoded_instruction);
 
 char* format_div_operation(R_INSTRUCTION* decoded_instruction);
 
-// char* format_sll_operation(R_INSTRUCTION* decoded_instruction);
+char* format_shl_operation(R_INSTRUCTION* decoded_instruction);
 
 // char* format_slt_operation(R_INSTRUCTION* decoded_instruction);
 
