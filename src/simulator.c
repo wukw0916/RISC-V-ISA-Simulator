@@ -312,6 +312,7 @@ bool execute_simulation_step(simulator* s) {
     INFO("Instruction [%08X] %08X: %s", pc, encoded_instruction, format_instruction(encoded_instruction));
 
     R_INSTRUCTION r_instruction = as_r_instruction(encoded_instruction);
+    RRR_INSTRUCTION rrr_instruction = as_rrr_instruction(encoded_instruction);
     // I_INSTRUCTION i_instruction = as_i_instruction(encoded_instruction);
     // S_INSTRUCTION s_instruction = as_s_instruction(encoded_instruction);
     // U_INSTRUCTION u_instruction = as_u_instruction(encoded_instruction);
@@ -388,6 +389,12 @@ bool execute_simulation_step(simulator* s) {
     if (is_xor_instruction(&r_instruction)) {
         write_register(s, r_instruction.rd, 
             read_register(s, r_instruction.rs1) ^ read_register(s, r_instruction.rs2)
+        );
+        return true;
+    }
+    if (is_mad_instruction(&rrr_instruction)) {
+        write_register(s, rrr_instruction.rd, 
+            ((int64_t)read_register_signed(s, rrr_instruction.rs1) * (int64_t)read_register_signed(s, rrr_instruction.rs2)) + read_register_signed(s,rrr_instruction.rs3)
         );
         return true;
     }

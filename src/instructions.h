@@ -29,6 +29,20 @@ typedef struct {
 } R_INSTRUCTION;
 R_INSTRUCTION as_r_instruction(uint32_t instruction);
 
+typedef struct {
+    // <TotalBits=4>
+    uint8_t op0;
+    // <TotalBits=7>
+    REGISTER rd;
+    // <TotalBits=7>
+    REGISTER rs1;
+    // <TotalBits=7>
+    REGISTER rs2;
+    // <TotalBits=7>
+    REGISTER rs3;
+} RRR_INSTRUCTION;
+RRR_INSTRUCTION as_rrr_instruction(uint32_t instruction);
+
 // typedef struct {
 //     // <TotalBits=7>
 //     uint8_t opcode;
@@ -169,6 +183,10 @@ bool is_not_instruction(const R_INSTRUCTION* decoded_instruction);
 #define TYPE_XOR 0b11;
 bool is_xor_instruction(const R_INSTRUCTION* decoded_instruction);
 
+// RRR type
+
+#define OP0_MAD 0b1010;
+bool is_mad_instruction(const RRR_INSTRUCTION* decoded_instruction);
 
 // #define OPCODE_SLT 0b0110011;
 // #define FUNC3_SLT 0b010;
@@ -376,6 +394,8 @@ char* format_or_operation(R_INSTRUCTION* decoded_instruction);
 char* format_not_operation(R_INSTRUCTION* decoded_instruction);
 
 char* format_xor_operation(R_INSTRUCTION* decoded_instruction);
+
+char* format_mad_operation(RRR_INSTRUCTION* decoded_instruction);
 
 // char* format_slt_operation(R_INSTRUCTION* decoded_instruction);
 

@@ -71,20 +71,77 @@ R_INSTRUCTION as_r_instruction(uint32_t instruction) {
         )
     };
 
-    if (d.op0 > (1 << 7))
+    if (d.op0 > (1 << 4))
         FAIL("R_INSTRUCTION.op0 decode error: size %d", d.op0);
-    if (d.rd > (1 << 5))
+    if (d.rd > (1 << 7))
         FAIL("R_INSTRUCTION.rd decode error: size %d", d.rd);
-    if (d.rs1 > (1 << 5))
+    if (d.rs1 > (1 << 7))
         FAIL("R_INSTRUCTION.rs1 decode error: size %d", d.rs1);
-    if (d.rs2 > (1 << 5))
+    if (d.rs2 > (1 << 7))
         FAIL("R_INSTRUCTION.rs2 decode error: size %d", d.rs2);
-    if (d.op1 > (1 << 7))
+    if (d.op1 > (1 << 3))
         FAIL("R_INSTRUCTION.op1 decode error: size %d", d.op1);
-    if (d.op2 > (1 << 7))
+    if (d.op2 > (1 << 2))
         FAIL("R_INSTRUCTION.op2 decode error: size %d", d.op2);
-    if (d.type > (1 << 7))
+    if (d.type > (1 << 2))
         FAIL("R_INSTRUCTION.type decode error: size %d", d.type);
+    return d;
+}
+
+RRR_INSTRUCTION as_rrr_instruction(uint32_t instruction) {
+    RRR_INSTRUCTION d = {
+        .op0 = (
+            // <TotalBits=7>
+            // <Start=0> <End=6> <Length=7> <Offset=0> <Zero=false>
+            (get_word_bits(instruction, 0, 3) << 0)
+            |
+            // Unsigned
+            0
+        ),
+        .rd = (
+            // <TotalBits=5>
+            // <Start=7> <End=11> <Length=5> <Offset=0> <Zero=false>
+            (get_word_bits(instruction, 4, 10) << 0)
+            |
+            // Unsigned
+            0
+        ),
+        .rs1 = (
+            // <TotalBits=5>
+            // <Start=15> <End=19> <Length=5> <Offset=0> <Zero=false>
+            (get_word_bits(instruction, 11, 17) << 0)
+            |
+            // Unsigned
+            0
+        ),
+        .rs2 = (
+            // <TotalBits=5>
+            // <Start=20> <End=24> <Length=5> <Offset=0> <Zero=false>
+            (get_word_bits(instruction, 18, 24) << 0)
+            |
+            // Unsigned
+            0
+        ),
+        .rs3 = (
+            // <TotalBits=7>
+            // <Start=0> <End=6> <Length=7> <Offset=0> <Zero=false>
+            (get_word_bits(instruction, 25, 31) << 0)
+            |
+            // Unsigned
+            0
+        )
+    };
+
+    if (d.op0 > (1 << 4))
+        FAIL("R_INSTRUCTION.op0 decode error: size %d", d.op0);
+    if (d.rd > (1 << 7))
+        FAIL("R_INSTRUCTION.rd decode error: size %d", d.rd);
+    if (d.rs1 > (1 << 7))
+        FAIL("R_INSTRUCTION.rs1 decode error: size %d", d.rs1);
+    if (d.rs2 > (1 << 7))
+        FAIL("R_INSTRUCTION.rs2 decode error: size %d", d.rs2);
+    if (d.rs3 > (1 << 7))
+        FAIL("R_INSTRUCTION.rs3 decode error: size %d", d.rs3);
     return d;
 }
 
@@ -557,6 +614,17 @@ bool is_xor_instruction(const R_INSTRUCTION* decoded_instruction) {
     return true;
 }
 
+bool is_mad_instruction(const RRR_INSTRUCTION* decoded_instruction) {
+    if (decoded_instruction == NULL) FAIL("Received NULL pointer on is_mad_instruction");
+    if (decoded_instruction->op0 != 0b1010) return false;
+    return true;
+}
+
+// bool is_fmad_instruction(const RRR_INSTRUCTION* decoded_instruction) {
+//     if (decoded_instruction == NULL) FAIL("Received NULL pointer on is_fmad_instruction");
+//     if (decoded_instruction->op0 != 0b1100) return false;
+//     return true;
+// }
 
 
 // bool is_slt_instruction(const R_INSTRUCTION* decoded_instruction) {
@@ -845,6 +913,7 @@ bool is_xor_instruction(const R_INSTRUCTION* decoded_instruction) {
 int count_all_instruction_matches(uint32_t encoded_instruction) {
     int count = 0;
     R_INSTRUCTION r_instruction = as_r_instruction(encoded_instruction);
+    RRR_INSTRUCTION rrr_instruction = as_rrr_instruction(encoded_instruction);
     // I_INSTRUCTION i_instruction = as_i_instruction(encoded_instruction);
     // S_INSTRUCTION s_instruction = as_s_instruction(encoded_instruction);
     // U_INSTRUCTION u_instruction = as_u_instruction(encoded_instruction);
@@ -861,6 +930,7 @@ int count_all_instruction_matches(uint32_t encoded_instruction) {
     count += is_or_instruction(&r_instruction);
     count += is_not_instruction(&r_instruction);
     count += is_xor_instruction(&r_instruction);
+    count += is_mad_instruction(&rrr_instruction);
     // count += is_slt_instruction(&r_instruction);
     // count += is_sltu_instruction(&r_instruction);
     // count += is_srl_instruction(&r_instruction);
@@ -905,6 +975,7 @@ int count_all_instruction_matches(uint32_t encoded_instruction) {
 
 char* format_instruction(uint32_t encoded_instruction) {
     R_INSTRUCTION r_instruction = as_r_instruction(encoded_instruction);
+    RRR_INSTRUCTION rrr_instruction = as_rrr_instruction(encoded_instruction);
     // I_INSTRUCTION i_instruction = as_i_instruction(encoded_instruction);
     // S_INSTRUCTION s_instruction = as_s_instruction(encoded_instruction);
     // U_INSTRUCTION u_instruction = as_u_instruction(encoded_instruction);
@@ -921,6 +992,7 @@ char* format_instruction(uint32_t encoded_instruction) {
     if (is_or_instruction(&r_instruction)) return format_or_operation(&r_instruction);
     if (is_not_instruction(&r_instruction)) return format_not_operation(&r_instruction);
     if (is_xor_instruction(&r_instruction)) return format_xor_operation(&r_instruction);
+    if (is_mad_instruction(&r_instruction)) return format_mad_operation(&rrr_instruction);
     // if (is_slt_instruction(&r_instruction)) return format_slt_operation(&r_instruction);
     // if (is_sltu_instruction(&r_instruction)) return format_sltu_operation(&r_instruction);
     // if (is_srl_instruction(&r_instruction)) return format_srl_operation(&r_instruction);
@@ -1068,6 +1140,17 @@ char* format_xor_operation(R_INSTRUCTION* decoded_instruction) {
         register_to_name(decoded_instruction->rd),
         register_to_name(decoded_instruction->rs1),
         register_to_name(decoded_instruction->rs2)
+    );
+    return format_memory;
+}
+
+char* format_mad_operation(RRR_INSTRUCTION* decoded_instruction) {
+    if (!is_mad_instruction(decoded_instruction)) return NULL;
+    sprintf(format_memory, "MAD <rd=%s> <rs1=%s> <rs2=%s> <rs3=%s>",
+        register_to_name(decoded_instruction->rd),
+        register_to_name(decoded_instruction->rs1),
+        register_to_name(decoded_instruction->rs2),
+        register_to_name(decoded_instruction->rs3)
     );
     return format_memory;
 }
