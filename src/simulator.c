@@ -313,6 +313,7 @@ bool execute_simulation_step(simulator* s) {
 
     R_INSTRUCTION r_instruction = as_r_instruction(encoded_instruction);
     RRR_INSTRUCTION rrr_instruction = as_rrr_instruction(encoded_instruction);
+    RI_INSTRUCTION ri_instruction = as_ri_instruction(encoded_instruction);
     // I_INSTRUCTION i_instruction = as_i_instruction(encoded_instruction);
     // S_INSTRUCTION s_instruction = as_s_instruction(encoded_instruction);
     // U_INSTRUCTION u_instruction = as_u_instruction(encoded_instruction);
@@ -409,6 +410,10 @@ bool execute_simulation_step(simulator* s) {
             // read_register(s,rrr_instruction.rs1) ? read_register(s,rrr_instruction.rs2) : read_register(s,rrr_instruction.rs3)
             (int64_t)read_register_signed(s, rrr_instruction.rs1) ? (int64_t)read_register_signed(s, rrr_instruction.rs2) : read_register_signed(s,rrr_instruction.rs3)
         );
+        return true;
+    }
+    if (is_setpc_instruction(&ri_instruction)) {
+        write_register(s, ri_instruction.rd, pc + (ri_instruction.imm21<<11));
         return true;
     }
     // if (is_slt_instruction(&r_instruction)) {
