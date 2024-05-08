@@ -620,11 +620,17 @@ bool is_mad_instruction(const RRR_INSTRUCTION* decoded_instruction) {
     return true;
 }
 
-// bool is_fmad_instruction(const RRR_INSTRUCTION* decoded_instruction) {
-//     if (decoded_instruction == NULL) FAIL("Received NULL pointer on is_fmad_instruction");
-//     if (decoded_instruction->op0 != 0b1100) return false;
-//     return true;
-// }
+bool is_fmad_instruction(const RRR_INSTRUCTION* decoded_instruction) {
+    if (decoded_instruction == NULL) FAIL("Received NULL pointer on is_fmad_instruction");
+    if (decoded_instruction->op0 != 0b1100) return false;
+    return true;
+}
+
+bool is_ifsetor_instruction(const RRR_INSTRUCTION* decoded_instruction) {
+    if (decoded_instruction == NULL) FAIL("Received NULL pointer on is_ifsetor_instruction");
+    if (decoded_instruction->op0 != 0b1110) return false;
+    return true;
+}
 
 
 // bool is_slt_instruction(const R_INSTRUCTION* decoded_instruction) {
@@ -931,6 +937,8 @@ int count_all_instruction_matches(uint32_t encoded_instruction) {
     count += is_not_instruction(&r_instruction);
     count += is_xor_instruction(&r_instruction);
     count += is_mad_instruction(&rrr_instruction);
+    count += is_fmad_instruction(&rrr_instruction);
+    count += is_ifsetor_instruction(&rrr_instruction);
     // count += is_slt_instruction(&r_instruction);
     // count += is_sltu_instruction(&r_instruction);
     // count += is_srl_instruction(&r_instruction);
@@ -993,6 +1001,8 @@ char* format_instruction(uint32_t encoded_instruction) {
     if (is_not_instruction(&r_instruction)) return format_not_operation(&r_instruction);
     if (is_xor_instruction(&r_instruction)) return format_xor_operation(&r_instruction);
     if (is_mad_instruction(&r_instruction)) return format_mad_operation(&rrr_instruction);
+    if (is_fmad_instruction(&r_instruction)) return format_fmad_operation(&rrr_instruction);
+    if (is_ifsetor_instruction(&r_instruction)) return format_ifsetor_operation(&rrr_instruction);
     // if (is_slt_instruction(&r_instruction)) return format_slt_operation(&r_instruction);
     // if (is_sltu_instruction(&r_instruction)) return format_sltu_operation(&r_instruction);
     // if (is_srl_instruction(&r_instruction)) return format_srl_operation(&r_instruction);
@@ -1147,6 +1157,28 @@ char* format_xor_operation(R_INSTRUCTION* decoded_instruction) {
 char* format_mad_operation(RRR_INSTRUCTION* decoded_instruction) {
     if (!is_mad_instruction(decoded_instruction)) return NULL;
     sprintf(format_memory, "MAD <rd=%s> <rs1=%s> <rs2=%s> <rs3=%s>",
+        register_to_name(decoded_instruction->rd),
+        register_to_name(decoded_instruction->rs1),
+        register_to_name(decoded_instruction->rs2),
+        register_to_name(decoded_instruction->rs3)
+    );
+    return format_memory;
+}
+
+char* format_fmad_operation(RRR_INSTRUCTION* decoded_instruction) {
+    if (!is_fmad_instruction(decoded_instruction)) return NULL;
+    sprintf(format_memory, "FMAD : <rd=%s> = <rs1=%s> * <rs2=%s> + <rs3=%s>",
+        register_to_name(decoded_instruction->rd),
+        register_to_name(decoded_instruction->rs1),
+        register_to_name(decoded_instruction->rs2),
+        register_to_name(decoded_instruction->rs3)
+    );
+    return format_memory;
+}
+
+char* format_ifsetor_operation(RRR_INSTRUCTION* decoded_instruction) {
+    if (!is_ifsetor_instruction(decoded_instruction)) return NULL;
+    sprintf(format_memory, "IFSETOR : <rd=%s> = <rs1=%s> ? <rs2=%s> : <rs3=%s>",
         register_to_name(decoded_instruction->rd),
         register_to_name(decoded_instruction->rs1),
         register_to_name(decoded_instruction->rs2),

@@ -188,6 +188,12 @@ bool is_xor_instruction(const R_INSTRUCTION* decoded_instruction);
 #define OP0_MAD 0b1010;
 bool is_mad_instruction(const RRR_INSTRUCTION* decoded_instruction);
 
+#define OP0_FMAD 0b1100;
+bool is_fmad_instruction(const RRR_INSTRUCTION* decoded_instruction);
+
+#define OP0_IFSETOR 0b1110;
+bool is_ifsetor_instruction(const RRR_INSTRUCTION* decoded_instruction);
+
 // #define OPCODE_SLT 0b0110011;
 // #define FUNC3_SLT 0b010;
 // #define FUNC7_SLT 0b0000000;
@@ -396,6 +402,10 @@ char* format_not_operation(R_INSTRUCTION* decoded_instruction);
 char* format_xor_operation(R_INSTRUCTION* decoded_instruction);
 
 char* format_mad_operation(RRR_INSTRUCTION* decoded_instruction);
+
+char* format_fmad_operation(RRR_INSTRUCTION* decoded_instruction);
+
+char* format_ifsetor_operation(RRR_INSTRUCTION* decoded_instruction);
 
 // char* format_slt_operation(R_INSTRUCTION* decoded_instruction);
 

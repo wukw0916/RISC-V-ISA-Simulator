@@ -398,6 +398,19 @@ bool execute_simulation_step(simulator* s) {
         );
         return true;
     }
+    if (is_fmad_instruction(&rrr_instruction)) {
+        write_register(s, rrr_instruction.rd, 
+            ((int64_t)read_register_signed(s, rrr_instruction.rs1) * (int64_t)read_register_signed(s, rrr_instruction.rs2)) + read_register_signed(s,rrr_instruction.rs3)
+        );
+        return true;
+    }
+    if (is_ifsetor_instruction(&rrr_instruction)) {
+        write_register(s, rrr_instruction.rd, 
+            // read_register(s,rrr_instruction.rs1) ? read_register(s,rrr_instruction.rs2) : read_register(s,rrr_instruction.rs3)
+            (int64_t)read_register_signed(s, rrr_instruction.rs1) ? (int64_t)read_register_signed(s, rrr_instruction.rs2) : read_register_signed(s,rrr_instruction.rs3)
+        );
+        return true;
+    }
     // if (is_slt_instruction(&r_instruction)) {
     //     if(read_register_signed(s, r_instruction.rs1) < read_register_signed(s, r_instruction.rs2)){
     //         write_register(s, r_instruction.rd, 1);
