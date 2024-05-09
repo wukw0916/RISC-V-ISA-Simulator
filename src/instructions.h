@@ -53,23 +53,19 @@ typedef struct {
 } RI_INSTRUCTION;
 RI_INSTRUCTION as_ri_instruction(uint32_t instruction);
 
-// typedef struct {
-//     // <TotalBits=7>
-//     uint8_t opcode;
-//     // <TotalBits=5>
-//     REGISTER rd;
-//     // <TotalBits=3>
-//     uint8_t func3;
-//     // <TotalBits=5>
-//     REGISTER rs1;
-//     // <TotalBits=7>
-//     uint8_t func7;
-//     // <TotalBits=12>
-//     uint16_t imm_u;
-//     // <TotalBits=12>
-//     int16_t imm_s;
-// } I_INSTRUCTION;
-// I_INSTRUCTION as_i_instruction(uint32_t instruction);
+typedef struct {
+    // <TotalBits=4>
+    uint8_t op0;
+    // <TotalBits=7>
+    REGISTER rd;
+    // <TotalBits=7>
+    REGISTER rs1;
+    // <TotalBits=3>
+    uint8_t op1;
+    // <TotalBits=11>
+    uint16_t imm11;
+} I_INSTRUCTION;
+I_INSTRUCTION as_i_instruction(uint32_t instruction);
 
 // typedef struct {
 //     // <TotalBits=7>
@@ -208,6 +204,11 @@ bool is_ifsetor_instruction(const RRR_INSTRUCTION* decoded_instruction);
 
 #define OP0_SETPC 0b1001;
 bool is_setpc_instruction(const RI_INSTRUCTION* decoded_instruction);
+
+// I type instruction
+#define OP0_ADDI 0b0001;
+#define OP1_ADDI 0b100;
+bool is_addi_instruction(const I_INSTRUCTION* decoded_instruction);
 
 // #define OPCODE_SLT 0b0110011;
 // #define FUNC3_SLT 0b010;
@@ -424,6 +425,8 @@ char* format_ifsetor_operation(RRR_INSTRUCTION* decoded_instruction);
 
 char* format_setpc_operation(RI_INSTRUCTION* decoded_instruction);
 
+char* format_addi_operation(I_INSTRUCTION* decoded_instruction);
+
 // char* format_slt_operation(R_INSTRUCTION* decoded_instruction);
 
 // char* format_sltu_operation(R_INSTRUCTION* decoded_instruction);
@@ -431,8 +434,6 @@ char* format_setpc_operation(RI_INSTRUCTION* decoded_instruction);
 // char* format_srl_operation(R_INSTRUCTION* decoded_instruction);
 
 // char* format_sra_operation(R_INSTRUCTION* decoded_instruction);
-
-// char* format_addi_operation(I_INSTRUCTION* decoded_instruction);
 
 // char* format_slti_operation(I_INSTRUCTION* decoded_instruction);
 
