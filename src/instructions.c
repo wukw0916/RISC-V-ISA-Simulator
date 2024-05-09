@@ -204,6 +204,82 @@ I_INSTRUCTION as_i_instruction(uint32_t instruction) {
     return d;
 }
 
+RL_INSTRUCTION as_rl_instruction(uint32_t instruction) {
+    RL_INSTRUCTION d = {
+        .op0 = (
+            // <TotalBits=4>
+            // <Start=0> <End=3> <Length=4> <Offset=0> <Zero=false>
+            (get_word_bits(instruction, 0, 3) << 0)
+            |
+            // Unsigned
+            0
+        ),
+        .rd = (
+            // <TotalBits=7>
+            // <Start=4> <End=10> <Length=7> <Offset=0> <Zero=false>
+            (get_word_bits(instruction, 4, 10) << 0)
+            |
+            // Unsigned
+            0
+        ),
+        .rs1 = (
+            // <TotalBits=7>
+            // <Start=11> <End=17> <Length=5> <Offset=0> <Zero=false>
+            (get_word_bits(instruction, 11, 17) << 0)
+            |
+            // Unsigned
+            0
+        ),
+        .imm11 = (
+            // <TotalBits=7>
+            // <Start=18> <End=24> <Length=7> <Offset=0> <Zero=false>
+            (get_word_bits(instruction, 18, 24) << 0)
+            |
+            // Unsigned
+            0
+        ),
+        .op1 = (
+            // <TotalBits=3>
+            // <Start=25> <End=27> <Length=3> <Offset=0> <Zero=false>
+            (get_word_bits(instruction, 25, 27) << 0)
+            |
+            // Unsigned
+            0
+        ),
+        .lsstype = (
+            // <TotalBits=2>
+            // <Start=28> <End=29> <Length=2> <Offset=0> <Zero=false>
+            (get_word_bits(instruction, 28, 29) << 0)
+            |
+            // Unsigned
+            0
+        ),
+        .lsdtype = (
+            // <TotalBits=2>
+            // <Start=30> <End=31> <Length=2> <Offset=0> <Zero=false>
+            (get_word_bits(instruction, 30, 31) << 0)
+            |
+            // Unsigned
+            0
+        )
+    };
+    if (d.op0 > (1 << 4))
+        FAIL("I_INSTRUCTION.op0 decode error: size %d", d.op0);
+    if (d.rd > (1 << 7))
+        FAIL("I_INSTRUCTION.rd decode error: size %d", d.rd);
+    if (d.rs1 > (1 << 7))
+        FAIL("I_INSTRUCTION.rs1 decode error: size %d", d.rs1);
+    if (d.imm11 > (1 << 11))
+        FAIL("I_INSTRUCTION.imm11 decode error: size %d", d.imm11);
+    if (d.op1 > (1 << 3))
+        FAIL("I_INSTRUCTION.op1 decode error: size %d", d.op1);
+    if (d.lsstype > (1 << 2))
+        FAIL("I_INSTRUCTION.lsstype decode error: size %d", d.lsstype);
+    if (d.lsdtype > (1 << 2))
+        FAIL("I_INSTRUCTION.lsdtype decode error: size %d", d.lsdtype);
+    return d;
+}
+
 // S_INSTRUCTION as_s_instruction(uint32_t instruction) {
 //     S_INSTRUCTION d = {
 //         .opcode = (
@@ -618,6 +694,15 @@ bool is_addi_instruction(const I_INSTRUCTION* decoded_instruction) {
     return true;
 }
 
+// RL type instruction
+
+bool is_ldu_instruction(const RL_INSTRUCTION* decoded_instruction) {
+    if (decoded_instruction == NULL) FAIL("Received NULL pointer on is_addi_instruction");
+    if (decoded_instruction->op0 != 0b0101) return false;
+    if (decoded_instruction->op1 != 0b000) return false;
+    return true;
+}
+
 
 // bool is_slt_instruction(const R_INSTRUCTION* decoded_instruction) {
 //     if (decoded_instruction == NULL) FAIL("Received NULL pointer on is_slt_instruction");
@@ -908,6 +993,7 @@ int count_all_instruction_matches(uint32_t encoded_instruction) {
     RRR_INSTRUCTION rrr_instruction = as_rrr_instruction(encoded_instruction);
     RI_INSTRUCTION ri_instruction = as_ri_instruction(encoded_instruction);
     I_INSTRUCTION i_instruction = as_i_instruction(encoded_instruction);
+    RL_INSTRUCTION rl_instruction = as_rl_instruction(encoded_instruction);
     // S_INSTRUCTION s_instruction = as_s_instruction(encoded_instruction);
     // U_INSTRUCTION u_instruction = as_u_instruction(encoded_instruction);
     // B_INSTRUCTION b_instruction = as_b_instruction(encoded_instruction);
@@ -928,6 +1014,7 @@ int count_all_instruction_matches(uint32_t encoded_instruction) {
     count += is_ifsetor_instruction(&rrr_instruction);
     count += is_setpc_instruction(&ri_instruction);
     count += is_addi_instruction(&i_instruction);
+    count += is_ldu_instruction(&rl_instruction);
     // count += is_slt_instruction(&r_instruction);
     // count += is_sltu_instruction(&r_instruction);
     // count += is_srl_instruction(&r_instruction);
@@ -974,6 +1061,7 @@ char* format_instruction(uint32_t encoded_instruction) {
     RRR_INSTRUCTION rrr_instruction = as_rrr_instruction(encoded_instruction);
     RI_INSTRUCTION ri_instruction = as_ri_instruction(encoded_instruction);
     I_INSTRUCTION i_instruction = as_i_instruction(encoded_instruction);
+    RL_INSTRUCTION rl_instruction = as_rl_instruction(encoded_instruction);
     // S_INSTRUCTION s_instruction = as_s_instruction(encoded_instruction);
     // U_INSTRUCTION u_instruction = as_u_instruction(encoded_instruction);
     // B_INSTRUCTION b_instruction = as_b_instruction(encoded_instruction);
@@ -994,6 +1082,7 @@ char* format_instruction(uint32_t encoded_instruction) {
     if (is_ifsetor_instruction(&r_instruction)) return format_ifsetor_operation(&rrr_instruction);
     if (is_setpc_instruction(&ri_instruction)) return format_setpc_operation(&ri_instruction);
     if (is_addi_instruction(&i_instruction)) return format_addi_operation(&i_instruction);
+    if (is_ldu_instruction(&rl_instruction)) return format_ldu_operation(&rl_instruction);
     // if (is_slt_instruction(&r_instruction)) return format_slt_operation(&r_instruction);
     // if (is_sltu_instruction(&r_instruction)) return format_sltu_operation(&r_instruction);
     // if (is_srl_instruction(&r_instruction)) return format_srl_operation(&r_instruction);
@@ -1190,6 +1279,17 @@ char* format_setpc_operation(RI_INSTRUCTION* decoded_instruction) {
 char* format_addi_operation(I_INSTRUCTION* decoded_instruction) {
     if (!is_addi_instruction(decoded_instruction)) return NULL;
     sprintf(format_memory, "ADDI <rd=%s> <rs1=%s> <imm11=%u>",
+        register_to_name(decoded_instruction->rd),
+        register_to_name(decoded_instruction->rs1),
+        decoded_instruction->imm11
+        
+    );
+    return format_memory;
+}
+
+char* format_ldu_operation(RL_INSTRUCTION* decoded_instruction) {
+    if (!is_ldu_instruction(decoded_instruction)) return NULL;
+    sprintf(format_memory, "LDU <rd=%s> <rs1=%s> <imm11=%u>",
         register_to_name(decoded_instruction->rd),
         register_to_name(decoded_instruction->rs1),
         decoded_instruction->imm11

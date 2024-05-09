@@ -67,6 +67,24 @@ typedef struct {
 } I_INSTRUCTION;
 I_INSTRUCTION as_i_instruction(uint32_t instruction);
 
+typedef struct {
+    // <TotalBits=4>
+    uint8_t op0;
+    // <TotalBits=7>
+    REGISTER rd;
+    // <TotalBits=7>
+    REGISTER rs1;
+    // <TotalBits=7>
+    uint16_t imm11;
+    // <TotalBits=3>
+    uint8_t op1;
+    //<TotalBits=2>
+    uint8_t lsstype;
+    //<TotalBits=2>
+    uint8_t lsdtype;
+} RL_INSTRUCTION;
+RL_INSTRUCTION as_rl_instruction(uint32_t instruction);
+
 // typedef struct {
 //     // <TotalBits=7>
 //     uint8_t opcode;
@@ -209,6 +227,12 @@ bool is_setpc_instruction(const RI_INSTRUCTION* decoded_instruction);
 #define OP0_ADDI 0b0001;
 #define OP1_ADDI 0b100;
 bool is_addi_instruction(const I_INSTRUCTION* decoded_instruction);
+
+// RL type instruction
+#define OP0_LDU 0b0101;
+#define OP1_LDU 0b000;
+bool is_ldu_instruction(const RL_INSTRUCTION* decoded_instruction);
+
 
 // #define OPCODE_SLT 0b0110011;
 // #define FUNC3_SLT 0b010;
@@ -426,6 +450,8 @@ char* format_ifsetor_operation(RRR_INSTRUCTION* decoded_instruction);
 char* format_setpc_operation(RI_INSTRUCTION* decoded_instruction);
 
 char* format_addi_operation(I_INSTRUCTION* decoded_instruction);
+
+char* format_ldu_operation(RL_INSTRUCTION* decoded_instruction);
 
 // char* format_slt_operation(R_INSTRUCTION* decoded_instruction);
 

@@ -315,6 +315,7 @@ bool execute_simulation_step(simulator* s) {
     RRR_INSTRUCTION rrr_instruction = as_rrr_instruction(encoded_instruction);
     RI_INSTRUCTION ri_instruction = as_ri_instruction(encoded_instruction);
     I_INSTRUCTION i_instruction = as_i_instruction(encoded_instruction);
+    RL_INSTRUCTION rl_instruction = as_rl_instruction(encoded_instruction);
     // S_INSTRUCTION s_instruction = as_s_instruction(encoded_instruction);
     // U_INSTRUCTION u_instruction = as_u_instruction(encoded_instruction);
     // B_INSTRUCTION b_instruction = as_b_instruction(encoded_instruction);
@@ -419,6 +420,12 @@ bool execute_simulation_step(simulator* s) {
     if (is_addi_instruction(&i_instruction)) {
         write_register(s, i_instruction.rd,
             (read_register(s, i_instruction.rs1) + i_instruction.imm11)
+        );
+        return true;
+    }
+    if (is_ldu_instruction(&rl_instruction)) {
+        write_register(s, rl_instruction.rd,
+            (read_register(s, rl_instruction.rs1) + rl_instruction.imm11)
         );
         return true;
     }

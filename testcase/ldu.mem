@@ -1,0 +1,10 @@
+PC: 0
+REG_T0: 0xffffffff
+REG_T1: 0xA
+REG_T2: 0x3
+0:  008CB175    //LDU
+4:  008CB175    //LDU
+8:  008CB175    //LDU
+C:  008CB175    //LDU
+10: 008CB175    //LDU
+14: 008CB175    //LDU
