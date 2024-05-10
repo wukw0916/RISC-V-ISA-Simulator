@@ -147,30 +147,6 @@ RL_INSTRUCTION as_rl_instruction(uint32_t instruction);
 #define TYPE_ABS 0b00;
 bool is_abs_instruction(const R_INSTRUCTION* decoded_instruction);
 
-#define OP0_ADD 0b0000;
-#define OP1_ADD 0b010;
-#define OP2_ADD 0b00;
-#define TYPE_ADD 0b00;
-bool is_add_instruction(const R_INSTRUCTION* decoded_instruction);
-
-#define OP0_SUB 0b0000;
-#define OP1_SUB 0b010;
-#define OP2_SUB 0b01;
-#define TYPE_SUB 0b00;
-bool is_sub_instruction(const R_INSTRUCTION* decoded_instruction);
-
-#define OP0_MUL 0b0000;
-#define OP1_MUL 0b010;
-#define OP2_MUL 0b10;
-#define TYPE_MUL 0b00;
-bool is_mul_instruction(const R_INSTRUCTION* decoded_instruction);
-
-#define OP0_DIV 0b0000;
-#define OP1_DIV 0b010;
-#define OP2_DIV 0b11;
-#define TYPE_DIV 0b00;
-bool is_div_instruction(const R_INSTRUCTION* decoded_instruction);
-
 #define OP0_SHL 0b0000;
 #define OP1_SHL 0b000;
 #define OP2_SHL 0b01;
@@ -206,6 +182,42 @@ bool is_not_instruction(const R_INSTRUCTION* decoded_instruction);
 #define OP2_XOR 0b11;
 #define TYPE_XOR 0b11;
 bool is_xor_instruction(const R_INSTRUCTION* decoded_instruction);
+
+#define OP0_ADD 0b0000;
+#define OP1_ADD 0b010;
+#define OP2_ADD 0b00;
+#define TYPE_ADD 0b00;
+bool is_add_instruction(const R_INSTRUCTION* decoded_instruction);
+
+#define OP0_SUB 0b0000;
+#define OP1_SUB 0b010;
+#define OP2_SUB 0b01;
+#define TYPE_SUB 0b00;
+bool is_sub_instruction(const R_INSTRUCTION* decoded_instruction);
+
+#define OP0_MUL 0b0000;
+#define OP1_MUL 0b010;
+#define OP2_MUL 0b10;
+#define TYPE_MUL 0b00;
+bool is_mul_instruction(const R_INSTRUCTION* decoded_instruction);
+
+#define OP0_DIV 0b0000;
+#define OP1_DIV 0b010;
+#define OP2_DIV 0b11;
+#define TYPE_DIV 0b00;
+bool is_div_instruction(const R_INSTRUCTION* decoded_instruction);
+
+#define OP0_SLT 0b0000;
+#define OP1_SLT 0b011;
+#define OP2_SLT 0b00;
+#define TYPE_SLT 0b00;
+bool is_slt_instruction(const R_INSTRUCTION* decoded_instruction);
+
+#define OP0_SLE 0b0000;
+#define OP1_SLE 0b011;
+#define OP2_SLE 0b01;
+#define TYPE_SLE 0b00;
+bool is_sle_instruction(const R_INSTRUCTION* decoded_instruction);
  
 // RRR type instruction
 
@@ -453,7 +465,9 @@ char* format_addi_operation(I_INSTRUCTION* decoded_instruction);
 
 char* format_ldu_operation(RL_INSTRUCTION* decoded_instruction);
 
-// char* format_slt_operation(R_INSTRUCTION* decoded_instruction);
+char* format_slt_operation(R_INSTRUCTION* decoded_instruction);
+
+char* format_sle_operation(R_INSTRUCTION* decoded_instruction);
 
 // char* format_sltu_operation(R_INSTRUCTION* decoded_instruction);
 

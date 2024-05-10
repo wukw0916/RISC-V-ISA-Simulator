@@ -1,0 +1,10 @@
+PC: 0
+REG_T0: 0xffffffff
+REG_T1: 0xA
+REG_T2: 0x3
+0:  0654B170    //SLT
+4:  0654B170    //SLT
+8:  0654B170    //SLT
+C:  0654B170    //SLT
+10: 0654B170    //SLT
+14: 0654B170    //SLT

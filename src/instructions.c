@@ -659,6 +659,25 @@ bool is_xor_instruction(const R_INSTRUCTION* decoded_instruction) {
     return true;
 }
 
+bool is_slt_instruction(const R_INSTRUCTION* decoded_instruction) {
+    if (decoded_instruction == NULL) FAIL("Received NULL pointer on is_slt_instruction");
+    if (decoded_instruction->op0 != 0b0000) return false;
+    if (decoded_instruction->op1 != 0b011) return false;
+    if (decoded_instruction->op2 != 0b00) return false;
+    if (decoded_instruction->type != 0b00) return false;
+    return true;
+}
+
+bool is_sle_instruction(const R_INSTRUCTION* decoded_instruction) {
+    if (decoded_instruction == NULL) FAIL("Received NULL pointer on is_sle_instruction");
+    if (decoded_instruction->op0 != 0b0000) return false;
+    if (decoded_instruction->op1 != 0b011) return false;
+    if (decoded_instruction->op2 != 0b01) return false;
+    if (decoded_instruction->type != 0b00) return false;
+    return true;
+}
+
+// RRR type instruction
 bool is_mad_instruction(const RRR_INSTRUCTION* decoded_instruction) {
     if (decoded_instruction == NULL) FAIL("Received NULL pointer on is_mad_instruction");
     if (decoded_instruction->op0 != 0b1010) return false;
@@ -1015,7 +1034,8 @@ int count_all_instruction_matches(uint32_t encoded_instruction) {
     count += is_setpc_instruction(&ri_instruction);
     count += is_addi_instruction(&i_instruction);
     count += is_ldu_instruction(&rl_instruction);
-    // count += is_slt_instruction(&r_instruction);
+    count += is_slt_instruction(&r_instruction);
+    count += is_sle_instruction(&r_instruction);
     // count += is_sltu_instruction(&r_instruction);
     // count += is_srl_instruction(&r_instruction);
     // count += is_sra_instruction(&r_instruction);
@@ -1083,7 +1103,8 @@ char* format_instruction(uint32_t encoded_instruction) {
     if (is_setpc_instruction(&ri_instruction)) return format_setpc_operation(&ri_instruction);
     if (is_addi_instruction(&i_instruction)) return format_addi_operation(&i_instruction);
     if (is_ldu_instruction(&rl_instruction)) return format_ldu_operation(&rl_instruction);
-    // if (is_slt_instruction(&r_instruction)) return format_slt_operation(&r_instruction);
+    if (is_slt_instruction(&r_instruction)) return format_slt_operation(&r_instruction);
+    if (is_sle_instruction(&r_instruction)) return format_sle_operation(&r_instruction);
     // if (is_sltu_instruction(&r_instruction)) return format_sltu_operation(&r_instruction);
     // if (is_srl_instruction(&r_instruction)) return format_srl_operation(&r_instruction);
     // if (is_sra_instruction(&r_instruction)) return format_sra_operation(&r_instruction);
@@ -1298,15 +1319,25 @@ char* format_ldu_operation(RL_INSTRUCTION* decoded_instruction) {
     return format_memory;
 }
 
-// char* format_slt_operation(R_INSTRUCTION* decoded_instruction) {
-//     if (!is_slt_instruction(decoded_instruction)) return NULL;
-//     sprintf(format_memory, "SLT <rd=%s> <rs1=%s> <rs2=%s>",
-//         register_to_name(decoded_instruction->rd),
-//         register_to_name(decoded_instruction->rs1),
-//         register_to_name(decoded_instruction->rs2)
-//     );
-//     return format_memory;
-// }
+char* format_slt_operation(R_INSTRUCTION* decoded_instruction) {
+    if (!is_slt_instruction(decoded_instruction)) return NULL;
+    sprintf(format_memory, "SLT <rd=%s> <rs1=%s> <rs2=%s>",
+        register_to_name(decoded_instruction->rd),
+        register_to_name(decoded_instruction->rs1),
+        register_to_name(decoded_instruction->rs2)
+    );
+    return format_memory;
+}
+
+char* format_sle_operation(R_INSTRUCTION* decoded_instruction) {
+    if (!is_sle_instruction(decoded_instruction)) return NULL;
+    sprintf(format_memory, "SLE <rd=%s> <rs1=%s> <rs2=%s>",
+        register_to_name(decoded_instruction->rd),
+        register_to_name(decoded_instruction->rs1),
+        register_to_name(decoded_instruction->rs2)
+    );
+    return format_memory;
+}
 
 // char* format_sltu_operation(R_INSTRUCTION* decoded_instruction) {
 //     if (!is_sltu_instruction(decoded_instruction)) return NULL;
