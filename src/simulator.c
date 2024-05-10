@@ -447,6 +447,42 @@ bool execute_simulation_step(simulator* s) {
         }
         return true;
     }
+    if (is_seq_instruction(&r_instruction)) {
+        if(read_register_signed(s, r_instruction.rs1) == read_register_signed(s, r_instruction.rs2)){
+            write_register(s, r_instruction.rd, 1);
+        }
+        else {
+            write_register(s, r_instruction.rd, 0);
+        }
+        return true;
+    }
+    if (is_sne_instruction(&r_instruction)) {
+        if(read_register_signed(s, r_instruction.rs1) != read_register_signed(s, r_instruction.rs2)){
+            write_register(s, r_instruction.rd, 1);
+        }
+        else {
+            write_register(s, r_instruction.rd, 0);
+        }
+        return true;
+    }
+    if (is_min_instruction(&r_instruction)) {
+        if(read_register_signed(s, r_instruction.rs1) < read_register_signed(s, r_instruction.rs2)){
+            write_register(s, r_instruction.rd, r_instruction.rs1);
+        }
+        else {
+            write_register(s, r_instruction.rd, r_instruction.rs2);
+        }
+        return true;
+    }
+    if (is_max_instruction(&r_instruction)) {
+        if(read_register_signed(s, r_instruction.rs1) > read_register_signed(s, r_instruction.rs2)){
+            write_register(s, r_instruction.rd, r_instruction.rs1);
+        }
+        else {
+            write_register(s, r_instruction.rd, r_instruction.rs2);
+        }
+        return true;
+    }
     // if (is_sltu_instruction(&r_instruction)) {
     //     if(read_register(s, r_instruction.rs1) < read_register(s, r_instruction.rs2)){
     //         write_register(s, r_instruction.rd, 1);

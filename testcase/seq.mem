@@ -1,0 +1,10 @@
+PC: 0
+REG_T0: 0xffffffff
+REG_T1: 0xA
+REG_T2: 0x3
+0:  2654B170    //SEQ
+4:  2654B170    //SEQ
+8:  2654B170    //SEQ
+C:  2654B170    //SEQ
+10: 2654B170    //SEQ
+14: 2654B170    //SEQ

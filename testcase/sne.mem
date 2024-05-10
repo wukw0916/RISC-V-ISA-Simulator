@@ -1,0 +1,10 @@
+PC: 0
+REG_T0: 0xffffffff
+REG_T1: 0xA
+REG_T2: 0x3
+0:  3654B170    //SNE
+4:  3654B170    //SNE
+8:  3654B170    //SNE
+C:  3654B170    //SNE
+10: 3654B170    //SNE
+14: 3654B170    //SNE

@@ -1,0 +1,10 @@
+PC: 0
+REG_T0: 0xffffffff
+REG_T1: 0xA
+REG_T2: 0x3
+0:  0854B170    //MIN
+4:  0854B170    //MIN
+8:  0854B170    //MIN
+C:  0854B170    //MIN
+10: 0854B170    //MIN
+14: 0854B170    //MIN

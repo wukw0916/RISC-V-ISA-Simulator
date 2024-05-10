@@ -677,6 +677,42 @@ bool is_sle_instruction(const R_INSTRUCTION* decoded_instruction) {
     return true;
 }
 
+bool is_seq_instruction(const R_INSTRUCTION* decoded_instruction) {
+    if (decoded_instruction == NULL) FAIL("Received NULL pointer on is_seq_instruction");
+    if (decoded_instruction->op0 != 0b0000) return false;
+    if (decoded_instruction->op1 != 0b011) return false;
+    if (decoded_instruction->op2 != 0b10) return false;
+    if (decoded_instruction->type != 0b00) return false;
+    return true;
+}
+
+bool is_sne_instruction(const R_INSTRUCTION* decoded_instruction) {
+    if (decoded_instruction == NULL) FAIL("Received NULL pointer on is_sne_instruction");
+    if (decoded_instruction->op0 != 0b0000) return false;
+    if (decoded_instruction->op1 != 0b011) return false;
+    if (decoded_instruction->op2 != 0b11) return false;
+    if (decoded_instruction->type != 0b00) return false;
+    return true;
+}
+
+bool is_min_instruction(const R_INSTRUCTION* decoded_instruction) {
+    if (decoded_instruction == NULL) FAIL("Received NULL pointer on is_min_instruction");
+    if (decoded_instruction->op0 != 0b0000) return false;
+    if (decoded_instruction->op1 != 0b100) return false;
+    if (decoded_instruction->op2 != 0b00) return false;
+    if (decoded_instruction->type != 0b00) return false;
+    return true;
+}
+
+bool is_max_instruction(const R_INSTRUCTION* decoded_instruction) {
+    if (decoded_instruction == NULL) FAIL("Received NULL pointer on is_max_instruction");
+    if (decoded_instruction->op0 != 0b0000) return false;
+    if (decoded_instruction->op1 != 0b100) return false;
+    if (decoded_instruction->op2 != 0b01) return false;
+    if (decoded_instruction->type != 0b00) return false;
+    return true;
+}
+
 // RRR type instruction
 bool is_mad_instruction(const RRR_INSTRUCTION* decoded_instruction) {
     if (decoded_instruction == NULL) FAIL("Received NULL pointer on is_mad_instruction");
@@ -1036,6 +1072,10 @@ int count_all_instruction_matches(uint32_t encoded_instruction) {
     count += is_ldu_instruction(&rl_instruction);
     count += is_slt_instruction(&r_instruction);
     count += is_sle_instruction(&r_instruction);
+    count += is_seq_instruction(&r_instruction);
+    count += is_sne_instruction(&r_instruction);
+    count += is_min_instruction(&r_instruction);
+    count += is_max_instruction(&r_instruction);
     // count += is_sltu_instruction(&r_instruction);
     // count += is_srl_instruction(&r_instruction);
     // count += is_sra_instruction(&r_instruction);
@@ -1105,6 +1145,10 @@ char* format_instruction(uint32_t encoded_instruction) {
     if (is_ldu_instruction(&rl_instruction)) return format_ldu_operation(&rl_instruction);
     if (is_slt_instruction(&r_instruction)) return format_slt_operation(&r_instruction);
     if (is_sle_instruction(&r_instruction)) return format_sle_operation(&r_instruction);
+    if (is_seq_instruction(&r_instruction)) return format_seq_operation(&r_instruction);
+    if (is_sne_instruction(&r_instruction)) return format_sne_operation(&r_instruction);
+    if (is_min_instruction(&r_instruction)) return format_min_operation(&r_instruction);
+    if (is_max_instruction(&r_instruction)) return format_max_operation(&r_instruction);
     // if (is_sltu_instruction(&r_instruction)) return format_sltu_operation(&r_instruction);
     // if (is_srl_instruction(&r_instruction)) return format_srl_operation(&r_instruction);
     // if (is_sra_instruction(&r_instruction)) return format_sra_operation(&r_instruction);
@@ -1339,6 +1383,45 @@ char* format_sle_operation(R_INSTRUCTION* decoded_instruction) {
     return format_memory;
 }
 
+char* format_seq_operation(R_INSTRUCTION* decoded_instruction) {
+    if (!is_seq_instruction(decoded_instruction)) return NULL;
+    sprintf(format_memory, "SEQ <rd=%s> <rs1=%s> <rs2=%s>",
+        register_to_name(decoded_instruction->rd),
+        register_to_name(decoded_instruction->rs1),
+        register_to_name(decoded_instruction->rs2)
+    );
+    return format_memory;
+}
+
+char* format_sne_operation(R_INSTRUCTION* decoded_instruction) {
+    if (!is_sne_instruction(decoded_instruction)) return NULL;
+    sprintf(format_memory, "SNE <rd=%s> <rs1=%s> <rs2=%s>",
+        register_to_name(decoded_instruction->rd),
+        register_to_name(decoded_instruction->rs1),
+        register_to_name(decoded_instruction->rs2)
+    );
+    return format_memory;
+}
+
+char* format_min_operation(R_INSTRUCTION* decoded_instruction) {
+    if (!is_min_instruction(decoded_instruction)) return NULL;
+    sprintf(format_memory, "MIN <rd=%s> <rs1=%s> <rs2=%s>",
+        register_to_name(decoded_instruction->rd),
+        register_to_name(decoded_instruction->rs1),
+        register_to_name(decoded_instruction->rs2)
+    );
+    return format_memory;
+}
+
+char* format_max_operation(R_INSTRUCTION* decoded_instruction) {
+    if (!is_max_instruction(decoded_instruction)) return NULL;
+    sprintf(format_memory, "MAX <rd=%s> <rs1=%s> <rs2=%s>",
+        register_to_name(decoded_instruction->rd),
+        register_to_name(decoded_instruction->rs1),
+        register_to_name(decoded_instruction->rs2)
+    );
+    return format_memory;
+}
 // char* format_sltu_operation(R_INSTRUCTION* decoded_instruction) {
 //     if (!is_sltu_instruction(decoded_instruction)) return NULL;
 //     sprintf(format_memory, "SLTU <rd=%s> <rs1=%s> <rs2=%s>",

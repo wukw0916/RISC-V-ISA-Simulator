@@ -218,6 +218,30 @@ bool is_slt_instruction(const R_INSTRUCTION* decoded_instruction);
 #define OP2_SLE 0b01;
 #define TYPE_SLE 0b00;
 bool is_sle_instruction(const R_INSTRUCTION* decoded_instruction);
+
+#define OP0_SEQ 0b0000;
+#define OP1_SEQ 0b011;
+#define OP2_SEQ 0b10;
+#define TYPE_SEQ 0b00;
+bool is_seq_instruction(const R_INSTRUCTION* decoded_instruction);
+
+#define OP0_SNE 0b0000;
+#define OP1_SNE 0b011;
+#define OP2_SNE 0b11;
+#define TYPE_SNE 0b00;
+bool is_sne_instruction(const R_INSTRUCTION* decoded_instruction);
+
+#define OP0_MIN 0b0000;
+#define OP1_MIN 0b100;
+#define OP2_MIN 0b00;
+#define TYPE_MIN 0b00;
+bool is_min_instruction(const R_INSTRUCTION* decoded_instruction);
+
+#define OP0_MAX 0b0000;
+#define OP1_MAX 0b100;
+#define OP2_MAX 0b01;
+#define TYPE_MAX 0b00;
+bool is_min_instruction(const R_INSTRUCTION* decoded_instruction);
  
 // RRR type instruction
 
@@ -468,6 +492,14 @@ char* format_ldu_operation(RL_INSTRUCTION* decoded_instruction);
 char* format_slt_operation(R_INSTRUCTION* decoded_instruction);
 
 char* format_sle_operation(R_INSTRUCTION* decoded_instruction);
+
+char* format_seq_operation(R_INSTRUCTION* decoded_instruction);
+
+char* format_sne_operation(R_INSTRUCTION* decoded_instruction);
+
+char* format_min_operation(R_INSTRUCTION* decoded_instruction);
+
+char* format_max_operation(R_INSTRUCTION* decoded_instruction);
 
 // char* format_sltu_operation(R_INSTRUCTION* decoded_instruction);
 
