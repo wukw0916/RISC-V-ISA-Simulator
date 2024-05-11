@@ -4,9 +4,9 @@ CC = gcc
 # Compile-time flags
 CFLAGS = -O3 -std=c99 -ggdb -Wall -flto
 
-all: build/egp01_simulator
+all: build/eGP01_Simulator
 
-build/egp01_simulator: src/main.o src/simulator.o src/instructions.o
+build/eGP01_Simulator: src/main.o src/simulator.o src/instructions.o
 	@mkdir $(@D) 2>/dev/null || true
 	$(CC) $^ $(CFLAGS) -o $@
 
@@ -25,8 +25,8 @@ tests/simulation/%.o: tests/simulation/%.c tests/simulation/test_main.h
 tests/simulation/%: src/instructions.o src/simulator.o tests/simulation/%.o
 	$(CC) $^ -o $@
 
-tests/c_code/%: tests/c_code/%.mem build/egp01_simulator
-	./build/egp01_simulator --load-file $< --verbose
+tests/c_code/%: tests/c_code/%.mem build/eGP01_Simulator
+	./build/eGP01_Simulator --load-file $< --verbose
 
 tests/c_code/%.mem: tests/c_code/%.c
 	./tools/c_to_mem $<
